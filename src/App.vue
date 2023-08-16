@@ -2,6 +2,7 @@
 import { RouterView } from "vue-router";
 import HeaderView from "./components/HeaderView.vue";
 import { useStore } from "./stores/store";
+import FooterView from "./components/FooterView.vue";
 
 const store = useStore();
 
@@ -59,8 +60,10 @@ const toggleSidebar = () => {
   </header>
 
   <main>
-    <RouterView :store="store" />
+    <RouterView class="mt-[250px]" :store="store" />
   </main>
 
-  <footer></footer>
+  <footer>
+    <FooterView />
+  </footer>
 </template>

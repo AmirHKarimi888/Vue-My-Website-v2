@@ -116,12 +116,12 @@ defineProps(["store"]);
           id="small-navbar"
         >
           <ul
-            class="flex flex-col font-medium p-4 md:p-0 mt-4 border border-gray-300 rounded-lg bg-gray-50 md:flex-row md:space-x-8 md:mt-0 md:border-0 md:bg-white dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700"
+            class="flex flex-col text-black dark:text-white font-medium p-4 md:p-0 mt-4 border border-gray-300 rounded-lg bg-gray-50 md:flex-row md:space-x-8 md:mt-0 md:border-0 md:bg-white dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700"
           >
             <li>
               <router-link
                 to="/"
-                class="block py-2 pl-3 pr-4 text-black dark:text-white rounded md:bg-transparent md:p-0"
+                class="block py-2 pl-3 pr-4 rounded md:bg-transparent md:p-0"
                 aria-current="page"
                 >Home</router-link
               >
@@ -129,21 +129,21 @@ defineProps(["store"]);
             <li v-if="store.isLoggedIn">
               <router-link
                 to="/dashboard"
-                class="block py-2 pl-3 pr-4 text-black dark:text-white rounded md:bg-transparent md:p-0"
+                class="block py-2 pl-3 pr-4 rounded md:bg-transparent md:p-0"
                 >Dashboard</router-link
               >
             </li>
             <li v-if="!store.isLoggedIn">
               <router-link
                 to="/register"
-                class="block py-2 pl-3 pr-4 text-black dark:text-white rounded md:bg-transparent md:p-0"
+                class="block py-2 pl-3 pr-4 rounded md:bg-transparent md:p-0"
                 >Register</router-link
               >
             </li>
             <li>
               <router-link
                 to="/about"
-                class="block py-2 pl-3 pr-4 text-black dark:text-white rounded md:bg-transparent md:p-0"
+                class="block py-2 pl-3 pr-4 rounded md:bg-transparent md:p-0"
                 >About</router-link
               >
             </li>
