@@ -4,6 +4,6 @@
 
 <template>
   <div class="home">
-    <h1>home</h1>
+    <div class="mt-20">Home</div>
   </div>
 </template>
