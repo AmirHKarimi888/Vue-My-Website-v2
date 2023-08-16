@@ -4,10 +4,6 @@ import DashboardView from '../views/DashboardView.vue'
 import RegisterView from '../views/RegisterView.vue'
 import LoginView from '../views/LoginView.vue'
 import AboutView from '../views/AboutView.vue'
-import { useStore } from '../stores/store'
-import { createPinia } from 'pinia'
-
-
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -38,7 +34,7 @@ const router = createRouter({
       component: AboutView
     }
   ],
-  linkExactActiveClass: 'text-blue-600'
+  linkExactActiveClass: 'text-blue-600 dark:text-blue-400'
 })
 
 export default router

@@ -1,26 +1,28 @@
 <script setup>
-const emit = defineEmits(['toggleTheme', 'toggleSmallNavbar']);
-defineProps(['store']);
+import SidebarView from './SidebarView.vue';
+
+const emit = defineEmits(["toggleTheme", "toggleSmallNavbar", "toggleSidebar"]);
+defineProps(["store"]);
+
+
 </script>
 
 <template>
   <div class="header">
-    <nav class="fixed top-0 w-full bg-white border-gray-200 dark:border-gray-600 dark:bg-gray-900 border-b border-b-gray-300">
+    <nav
+      class="fixed top-0 w-full bg-white border-gray-200 dark:border-gray-600 dark:bg-gray-900 border-b border-b-gray-400"
+    >
       <div
         class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4"
       >
         <a href="/" class="flex items-center">
-          <img
-            src="https://flowbite.com/docs/images/logo.svg"
-            class="h-8 mr-3"
-            alt="Flowbite Logo"
-          />
+          <img src="favicon.ico" class="h-8 mr-3" alt="Flowbite Logo" />
           <span
             class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white"
             >My Website</span
           >
         </a>
-        
+
         <div class="flex items-center md:order-2">
           <!-- Dropdown menu -->
           <div
@@ -76,8 +78,8 @@ defineProps(['store']);
             aria-controls="navbar-user"
             aria-expanded="false"
           >
-          <i v-if="store.isLightTheme" class="fa fa-moon-o"></i>
-          <i v-else class="fa fa-sun-o"></i>
+            <i v-if="store.isLightTheme" class="fa fa-moon-o"></i>
+            <i v-else class="fa fa-sun-o"></i>
           </button>
 
           <button
@@ -88,10 +90,11 @@ defineProps(['store']);
             aria-controls="navbar-user"
             aria-expanded="false"
           >
-          <i class="fa fa-bars"></i>
+            <i class="fa fa-bars"></i>
           </button>
 
           <button
+            @click="emit('toggleSidebar')"
             type="button"
             class="flex mr-3 text-sm bg-gray-800 rounded-full md:mr-0 focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600"
             id="user-menu-button"
@@ -107,7 +110,7 @@ defineProps(['store']);
             />
           </button>
         </div>
-        
+
         <div
           class="items-center justify-between hidden w-full md:flex md:w-auto md:order-1"
           id="small-navbar"
@@ -118,7 +121,7 @@ defineProps(['store']);
             <li>
               <router-link
                 to="/"
-                class="block py-2 pl-3 pr-4 text-black rounded md:bg-transparent md:p-0"
+                class="block py-2 pl-3 pr-4 text-black dark:text-white rounded md:bg-transparent md:p-0"
                 aria-current="page"
                 >Home</router-link
               >
@@ -126,28 +129,29 @@ defineProps(['store']);
             <li v-if="store.isLoggedIn">
               <router-link
                 to="/dashboard"
-                class="block py-2 pl-3 pr-4 text-black rounded md:bg-transparent md:p-0"
+                class="block py-2 pl-3 pr-4 text-black dark:text-white rounded md:bg-transparent md:p-0"
                 >Dashboard</router-link
               >
             </li>
             <li v-if="!store.isLoggedIn">
               <router-link
                 to="/register"
-                class="block py-2 pl-3 pr-4 text-black rounded md:bg-transparent md:p-0"
+                class="block py-2 pl-3 pr-4 text-black dark:text-white rounded md:bg-transparent md:p-0"
                 >Register</router-link
               >
             </li>
             <li>
               <router-link
                 to="/about"
-                class="block py-2 pl-3 pr-4 text-black rounded md:bg-transparent md:p-0"
+                class="block py-2 pl-3 pr-4 text-black dark:text-white rounded md:bg-transparent md:p-0"
                 >About</router-link
               >
             </li>
           </ul>
         </div>
-
       </div>
     </nav>
+    <SidebarView
+    @toggleSidebar="emit('toggleSidebar')" />
   </div>
 </template>
