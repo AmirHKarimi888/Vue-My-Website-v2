@@ -39,15 +39,11 @@ const toggleSmallNavbar = () => {
 };
 
 const toggleSidebar = () => {
-  const sidebar = document.querySelector("#drawer-disable-body-scrolling");
-  if(sidebar.classList.contains("translate-x-full")) {
-    sidebar.classList.remove("translate-x-full");
-    sidebar.classList.add("translate-x-0");
-    document.querySelector(".sidebar-backdrop").classList.add("fixed", "w-full", "h-screen", "backdrop-blur-sm");
-  } else if(sidebar.classList.contains("translate-x-0")) {
-    sidebar.classList.remove("translate-x-0");
-    sidebar.classList.add("translate-x-full");
-    document.querySelector(".sidebar-backdrop").classList.remove("fixed", "w-full", "h-screen","backdrop-blur-sm");
+  const sidebarBackdrop = document.querySelector("#sidebar-backdrop");
+  if(sidebarBackdrop.classList.contains("w-full")) {
+    sidebarBackdrop.classList.remove("w-full");
+  } else {
+    sidebarBackdrop.classList.add("w-full");
   }
 }
 </script>

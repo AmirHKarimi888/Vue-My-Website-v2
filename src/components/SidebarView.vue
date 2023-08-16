@@ -4,12 +4,13 @@ const emit = defineEmits(["toggleSidebar"]);
 
 <template>
   <div
-    class="sidebar-backdrop"
+    class="sidebar-backdrop fixed top-0 backdrop-blur-sm bg-white/5 h-screen"
+    id="sidebar-backdrop"
     @click.self="emit('toggleSidebar')"
   >
     <div
-      id="drawer-disable-body-scrolling"
-      class="fixed top-[-7px] right-0 h-screen p-4 border-l border-t border-gray-300 overflow-y-auto transition-transform translate-x-full bg-white w-64 dark:bg-gray-800"
+      id="sidebar"
+      class="fixed top-0 right-0 h-screen p-4 border-l border-t border-gray-300 dark:border-gray-600 overflow-y-auto transition-transform translate-x-0 bg-white w-64 dark:bg-gray-800"
       tabindex="-1"
       aria-labelledby="drawer-disable-body-scrolling-label"
     >
