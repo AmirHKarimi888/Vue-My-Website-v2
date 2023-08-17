@@ -4,7 +4,7 @@ const emit = defineEmits(["toggleSidebar"]);
 
 <template>
   <div
-    class="sidebar-backdrop fixed top-0 backdrop-blur-sm bg-white/5 h-screen"
+    class="sidebar-backdrop fixed top-0 z-30 backdrop-blur-sm bg-white/5 h-screen"
     id="sidebar-backdrop"
     @click.self="emit('toggleSidebar')"
   >

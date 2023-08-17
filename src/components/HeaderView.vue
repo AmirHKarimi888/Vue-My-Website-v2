@@ -10,7 +10,7 @@ defineProps(["store"]);
 <template>
   <div class="header">
     <nav
-      class="fixed top-0 w-full bg-white border-gray-200 dark:border-gray-600 dark:bg-gray-900 border-b border-b-gray-400"
+      class="fixed top-0 w-full z-20 bg-white border-gray-200 dark:border-gray-600 dark:bg-gray-900 border-b border-b-gray-400"
     >
       <div
         class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4"
@@ -105,7 +105,7 @@ defineProps(["store"]);
             <span class="sr-only">Open user menu</span>
             <img
               class="w-8 h-8 rounded-full"
-              src="/docs/images/people/profile-picture-3.jpg"
+              src="/favicon.ico"
               alt="user photo"
             />
           </button>
