@@ -1,8 +1,11 @@
 <script setup>
+import { onMounted, ref } from "vue";
 import { RouterView } from "vue-router";
-import HeaderView from "./components/HeaderView.vue";
 import { useStore } from "./stores/store";
+
+import HeaderView from "./components/HeaderView.vue";
 import FooterView from "./components/FooterView.vue";
+import { Action, url } from "./api";
 
 const store = useStore();
 
@@ -17,6 +20,37 @@ if ("theme" in localStorage) {
 } else {
   localStorage.setItem("theme", "light");
 }
+
+const users = ref([]);
+const loggedInUser = ref({});
+
+onMounted(() => {
+  Action.get(url + "users", (response) => {
+    users.value = response.data;
+  }).then(() => {
+    if ("loggedInUser" in localStorage) {
+      let chosen = users.value.filter((user) => {
+        if (user.uid == parseInt(localStorage.getItem("loggedInUser"))) {
+          return user;
+        }
+      });
+
+      if (chosen[0]) {
+        store.isLoggedIn = true;
+        loggedInUser.value = chosen[0];
+        localStorage.setItem("loggedInUser", chosen[0].uid);
+      } else {
+        store.isLoggedIn = false;
+        loggedInUser.value = {};
+        localStorage.setItem("loggedInUser", "");
+      }
+    } else {
+      localStorage.setItem("loggedInUser", "");
+      store.isLoggedIn = false;
+      loggedInUser.value = {};
+    }
+  }).then(() => console.log(loggedInUser.value))
+});
 
 const toggleTheme = () => {
   if (store.isLightTheme == true) {
@@ -41,12 +75,12 @@ const toggleSmallNavbar = () => {
 
 const toggleSidebar = () => {
   const sidebarBackdrop = document.querySelector("#sidebar-backdrop");
-  if(sidebarBackdrop.classList.contains("w-full")) {
+  if (sidebarBackdrop.classList.contains("w-full")) {
     sidebarBackdrop.classList.remove("w-full");
   } else {
     sidebarBackdrop.classList.add("w-full");
   }
-}
+};
 </script>
 
 <template>
@@ -56,11 +90,12 @@ const toggleSidebar = () => {
       @toggleSidebar="toggleSidebar"
       @toggleTheme="toggleTheme"
       :store="store"
+      :loggedInUser="loggedInUser"
     />
   </header>
 
   <main>
-    <RouterView class="mt-[250px]" :store="store" />
+    <RouterView class="mt-[250px]" :loggedInUser="loggedInUser" />
   </main>
 
   <footer>

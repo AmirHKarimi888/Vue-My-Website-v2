@@ -1,8 +1,10 @@
 <script setup>
+import { ref, watchEffect } from "vue"
+
 import SidebarView from './SidebarView.vue';
 
 const emit = defineEmits(["toggleTheme", "toggleSmallNavbar", "toggleSidebar"]);
-defineProps(["store"]);
+defineProps(["store", "loggedInUser"]);
 
 
 </script>
@@ -94,6 +96,7 @@ defineProps(["store"]);
           </button>
 
           <button
+            v-if="store.isLoggedIn"
             @click="emit('toggleSidebar')"
             type="button"
             class="flex mr-3 text-sm bg-gray-800 rounded-full md:mr-0 focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600"
@@ -105,7 +108,7 @@ defineProps(["store"]);
             <span class="sr-only">Open user menu</span>
             <img
               class="w-8 h-8 rounded-full"
-              src="/favicon.ico"
+              :src="loggedInUser.avatar"
               alt="user photo"
             />
           </button>

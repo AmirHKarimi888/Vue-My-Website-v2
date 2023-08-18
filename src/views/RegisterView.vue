@@ -1,12 +1,81 @@
 <script setup>
+import { onMounted, ref } from "vue"
+import { useRouter } from "vue-router";
+import { useForm } from "vee-validate";
 import { useStore } from "../stores/store";
+import { Action, url } from "../api/index"
+import * as yup from "yup";
 
+const props = defineProps([]);
+const router = useRouter();
 const store = useStore();
+
+const users = ref([]);
+
+onMounted(() => {
+  Action.get(url + "users", (response) => {
+    users.value = response.data;
+  }).then(() => {
+    console.log(users.value);
+  })
+})
+
+const schema = yup.object({
+  username: yup.string().required("Username is required"),
+  email: yup.string().email().required("Email is required"),
+  password: yup.string().min(6).required("Password is required"),
+  repeatPassword: yup.string().required().oneOf([yup.ref('password'), null], "Passwords don't match")
+})
+const alreadyExistsError = ref(false);
+const registeredSuccessfully = ref(false);
+const { defineInputBinds, errors, handleSubmit } = useForm({
+  validationSchema: schema
+});
+
+const username = defineInputBinds('username');
+const email = defineInputBinds('email');
+const password = defineInputBinds('password');
+const repeatPassword = defineInputBinds('repeatPassword');
+
+const registerUser = handleSubmit((data) => {
+  
+  let rep = users.value.filter((user) => {
+    if(user.email == data.email) {
+      return user;
+    }
+  })
+
+  let newUser = {
+    id: users.value.length + 1,
+    uid: Math.round(Math.random() * 1000000000000),
+    username: data.username,
+    email: data.email,
+    password: data.password,
+    avatar: `https://xsgames.co/randomusers/assets/avatars/pixel/${ users.value.length + 1 }.jpg`,
+    admin: false
+  }
+
+  if(rep[0]) {
+    alreadyExistsError.value = true;
+    registeredSuccessfully.value = false;
+  } else {
+    alreadyExistsError.value = false;
+    Action.post(url + "users", newUser).then(() => {
+      registeredSuccessfully.value = true;
+    }).then(() => {
+      store.isLoggedIn = true;
+      store.loggedInUser = newUser.uid;
+    }).then(() => {
+      router.push("/");
+    })
+  }
+})
 </script>
 
 <template>
   <div class="register">
     <form
+      @submit="registerUser"
       class="mx-auto w-[400px] border border-gray-400 dark:border-gray-600 p-9 rounded-lg"
     >
       <div class="mb-6">
@@ -16,10 +85,12 @@ const store = useStore();
           >Username</label
         >
         <input
+          v-bind="username"
           type="text"
           id="base-input"
           class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
         />
+        <p class="mt-2 text-sm text-red-600 dark:text-red-500"><span class="font-medium">{{ errors.username }}</span></p>
       </div>
       <div class="mb-6">
         <label
@@ -28,12 +99,14 @@ const store = useStore();
           >Your email</label
         >
         <input
+          v-bind="email"
           type="email"
           id="email"
           class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light"
           placeholder="name@flowbite.com"
           required
         />
+        <p class="mt-2 text-sm text-red-600 dark:text-red-500"><span class="font-medium">{{ errors.email }}</span></p>
       </div>
       <div class="mb-6">
         <label
@@ -42,11 +115,13 @@ const store = useStore();
           >Your password</label
         >
         <input
+          v-bind="password"
           type="password"
           id="password"
           class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light"
           required
         />
+        <p class="mt-2 text-sm text-red-600 dark:text-red-500"><span class="font-medium">{{ errors.password }}</span></p>
       </div>
       <div class="mb-6">
         <label
@@ -55,11 +130,13 @@ const store = useStore();
           >Repeat password</label
         >
         <input
+          v-bind="repeatPassword"
           type="password"
           id="repeat-password"
           class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light"
           required
         />
+        <p class="mt-2 text-sm text-red-600 dark:text-red-500"><span class="font-medium">{{ errors.repeatPassword }}</span></p>
       </div>
       <div class="flex items-start mb-6">
         <div class="flex items-center h-5">
@@ -86,6 +163,8 @@ const store = useStore();
       >
         Register new account
       </button>
+      <p v-if="alreadyExistsError" class="mt-5 text-sm text-red-600 dark:text-red-500"><span class="font-medium">Oops!</span> User already exists!</p>
+      <p v-if="registeredSuccessfully" class="mt-5 text-sm text-green-600 dark:text-green-500"><span class="font-medium">Alright!</span> Registered successfully!</p>
     </form>
   </div>
 </template>
