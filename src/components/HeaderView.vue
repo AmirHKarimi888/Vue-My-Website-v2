@@ -1,11 +1,8 @@
 <script setup>
-import { ref, watchEffect } from "vue"
-
 import SidebarView from './SidebarView.vue';
 
-const emit = defineEmits(["toggleTheme", "toggleSmallNavbar", "toggleSidebar"]);
-defineProps(["store", "loggedInUser"]);
 
+const props = defineProps(["store"]);
 
 </script>
 
@@ -73,7 +70,7 @@ defineProps(["store", "loggedInUser"]);
           </div>
 
           <button
-            @click="emit('toggleTheme')"
+            @click="store.toggleTheme()"
             data-collapse-toggle="navbar-user"
             type="button"
             class="inline-flex items-center p-2 me-2 w-10 h-10 justify-center text-2xl text-gray-500 rounded-lg hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
@@ -85,7 +82,7 @@ defineProps(["store", "loggedInUser"]);
           </button>
 
           <button
-            @click="emit('toggleSmallNavbar')"
+            @click="store.toggleSmallNavbar()"
             data-collapse-toggle="navbar-user"
             type="button"
             class="inline-flex items-center p-2 me-2 w-10 h-10 justify-center text-2xl text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
@@ -97,7 +94,7 @@ defineProps(["store", "loggedInUser"]);
 
           <button
             v-if="store.isLoggedIn"
-            @click="emit('toggleSidebar')"
+            @click="store.toggleSidebar()"
             type="button"
             class="flex mr-3 text-sm bg-gray-800 rounded-full md:mr-0 focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600"
             id="user-menu-button"
@@ -108,7 +105,7 @@ defineProps(["store", "loggedInUser"]);
             <span class="sr-only">Open user menu</span>
             <img
               class="w-8 h-8 rounded-full"
-              :src="loggedInUser.avatar"
+              :src="store.loggedInUser.avatar"
               alt="user photo"
             />
           </button>
@@ -155,6 +152,6 @@ defineProps(["store", "loggedInUser"]);
       </div>
     </nav>
     <SidebarView
-    @toggleSidebar="emit('toggleSidebar')" />
+    :store="store" />
   </div>
 </template>

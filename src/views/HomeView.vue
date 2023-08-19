@@ -3,27 +3,21 @@ import { onMounted, ref } from "vue"
 const activeAnimateFadeInUp = (id) => {
   document.querySelector(`#${id}`).classList.add("animate__animated", "animate__fadeInUp");
 }
+const deActiveAnimateFadeInUp = (id) => {
+  document.querySelector(`#${id}`).classList.remove("animate__animated", "animate__fadeInUp");
+}
 const activeAnimateFadeInDown = (id) => {
   document.querySelector(`#${id}`).classList.add("animate__animated", "animate__fadeInDown");
 }
 
 const props = defineProps(["loggedInUser"]);
 
-const loggedInUser = ref({});
-
-onMounted(() => {
-  setTimeout(() => {
-    loggedInUser.value = props.loggedInUser
-    console.log(loggedInUser.value);
-  }, 4000)
-})
-
 </script>
 
 <template>
   <div class="home">
     <section id="intro"
-      class="h-screen mt-[-177px] p-6 bg-center bg-no-repeat bg-[url('https://flowbite.s3.amazonaws.com/docs/jumbotron/conference.jpg')] overflow-y-scroll bg-cover bg-fixed bg-center bg-gray-700 bg-blend-multiply grid justify-center items-center">
+      class="h-screen mt-[-177px] p-6 bg-no-repeat bg-[url('https://flowbite.s3.amazonaws.com/docs/jumbotron/conference.jpg')] bg-cover bg-fixed bg-center bg-gray-700 bg-blend-multiply grid justify-center items-center">
       <div id="introContent"
         class="animate__animated animate__fadeInUp px-4 mx-auto max-w-screen-xl text-center py-24 lg:py-56">
         <h1 class="mb-4 text-[150%] font-extrabold tracking-tight leading-none text-white md:text-5xl lg:text-6xl">
@@ -32,6 +26,7 @@ onMounted(() => {
           This is my official website. You can see my posts and projects here!</p>
         <div class="flex flex-col space-y-4 sm:flex-row sm:justify-center sm:space-y-0 sm:space-x-4">
           <a href="#projectsIntro"
+            @click="deActiveAnimateFadeInUp('projectsIntroContent')"
             class="inline-flex justify-center items-center py-3 px-5 text-base font-medium text-center text-white rounded-lg bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-900">
             Get started
             <svg class="w-3.5 h-3.5 ml-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
@@ -78,7 +73,7 @@ onMounted(() => {
       </div>
     </section>
 
-    <section @mouseenter="activeAnimateFadeInDown('blogIntroContent')"
+    <section @mouseenter="activeAnimateFadeInUp('blogIntroContent')"
       @touchstart="activeAnimateFadeInDown('blogIntroContent')" id="blogIntro"
       class="h-screen bg-center bg-no-repeat bg-blend-multiply grid justify-center items-center bg-white dark:bg-gray-800 dark:border-gray-600">
       <div id="blogIntroContent" class="md:flex lg:flex sm:grid mt-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 ">
