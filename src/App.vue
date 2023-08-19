@@ -5,6 +5,10 @@ import { useStore } from "./stores/store";
 
 import HeaderView from "./components/HeaderView.vue";
 import FooterView from "./components/FooterView.vue";
+
+import AskBeforeModal from './components/modals/AskBeforeModal.vue';
+import SuccessModal from './components/modals/SuccessModal.vue';
+import FailModal from './components/modals/FailModal.vue';
 import { Action, url } from "./api";
 
 const store = useStore();
@@ -32,7 +36,6 @@ onMounted(() => {
       } else {
         store.isLoggedIn = false;
         store.loggedInUser = {};
-        localStorage.setItem("loggedInUser", "");
       }
     } else {
       store.isLoggedIn = false;
@@ -46,6 +49,12 @@ onMounted(() => {
 </script>
 
 <template>
+  <div>
+    <AskBeforeModal :store="store"/>
+    <SuccessModal :store="store" />
+    <FailModal :store="store" />
+  </div>
+
   <header>
     <HeaderView
       :store="store"

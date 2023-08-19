@@ -66,7 +66,11 @@ const registerUser = handleSubmit((data) => {
       store.isLoggedIn = true;
       store.loggedInUser = newUser.uid;
     }).then(() => {
-      router.push("/");
+      localStorage.setItem("loggedInUser", newUser.uid);
+    }).then(() => {
+      store.openModal('successModal');
+    }).then(() => {
+      window.location.href = "/";
     })
   }
 })

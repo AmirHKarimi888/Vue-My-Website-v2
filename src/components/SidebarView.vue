@@ -1,11 +1,7 @@
 <script setup>
 import { ref } from 'vue';
-import AskBeforeModal from './modals/AskBeforeModal.vue';
-
 
 const props = defineProps(["store"]);
-
-const askBeforeModalView = ref(false);
 </script>
 
 <template>
@@ -45,23 +41,23 @@ const askBeforeModalView = ref(false);
         <span class="sr-only">Close menu</span>
       </button>
 
-      <div class="my-5 w-full text-center border-b dark:border-b-gray-600 text-gray-700 dark:text-gray-200">
+      <div class="bg-gray-200 mt-10 p-3 rounded-lg border border-gray-400 dark:bg-gray-700 dark:border-gray-500 w-full text-center border-b dark:border-b-gray-600 text-gray-700 dark:text-gray-200">
         <img class="w-10 h-10 rounded-full mx-auto border" :src="store.loggedInUser.avatar" alt="Rounded avatar">
         <h4 class="mt-2">{{ store.loggedInUser.username }}</h4>
         <p class="mt-2">{{ store.loggedInUser.email }}</p>
-        <p v-if="store.loggedInUser.admin" class="mt-2 mb-5 text-green-500">Admin</p>
+        <p v-if="store.loggedInUser.admin" class="mt-2 text-green-500">Admin</p>
       </div>
 
       <div class="py-4 overflow-y-auto">
         <ul class="space-y-2 font-medium">
           <li>
-            <a
-              href="#"
+            <router-link
+              to="/dashboard"
               class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
             >
               <i class="fa fa-dashboard"></i>
               <span class="ml-3">Dashboard</span>
-            </a>
+            </router-link>
           </li>
           <li>
             <a
@@ -73,10 +69,9 @@ const askBeforeModalView = ref(false);
             </a>
           </li>
 
-          <li @click="store.openModal('askBeforeModal')">
+          <li @click="store.openModal('askBeforeModal', 'signOut')">
             <a
-              href="#"
-              class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
+              class="flex cursor-pointer items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
             >
               <i class="fa fa-sign-out"></i>
               <span class="flex-1 ml-3 whitespace-nowrap">Sign Out</span>
@@ -85,7 +80,5 @@ const askBeforeModalView = ref(false);
         </ul>
       </div>
     </div>
-
-    <AskBeforeModal :store="store"/>
   </div>
 </template>

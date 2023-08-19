@@ -58,11 +58,10 @@ export const useStore = defineStore("store", () => {
     document.getElementById(id).classList.add("hidden");
   }
 
-  const signOut = (id) => {
+  const signOut = () => {
     isLoggedIn.value = false;
     loggedInUser.value = {};
     localStorage.setItem("loggedInUser", "");
-    document.getElementById(id).classList.remove("hidden");
     setTimeout(() => {
       window.location.href = "/";
     }, 1000)
