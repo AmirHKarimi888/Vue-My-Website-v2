@@ -8,6 +8,12 @@ export const useStore = defineStore("store", () => {
   const isLoggedIn = ref(false);
   const loggedInUser = ref({});
 
+  if("loggedInUser" in localStorage) {
+    if(localStorage.getItem("loggedInUser") != "") {
+      isLoggedIn.value = true;
+    }
+  }
+
   if ("theme" in localStorage) {
     if (localStorage.getItem("theme") == "light") {
       document.documentElement.classList.remove("dark");

@@ -34,9 +34,9 @@ onMounted(() => {
         store.loggedInUser = chosen[0];
         localStorage.setItem("loggedInUser", chosen[0].uid);
       } else {
-        store.isLoggedIn = false;
         store.loggedInUser = {};
       }
+
     } else {
       store.isLoggedIn = false;
       store.loggedInUser = {};

@@ -58,6 +58,7 @@ const registerUser = handleSubmit((data) => {
   if(rep[0]) {
     alreadyExistsError.value = true;
     registeredSuccessfully.value = false;
+    store.openModal("failModal");
   } else {
     alreadyExistsError.value = false;
     Action.post(url + "users", newUser).then(() => {
@@ -169,6 +170,7 @@ const registerUser = handleSubmit((data) => {
       </button>
       <p v-if="alreadyExistsError" class="mt-5 text-sm text-red-600 dark:text-red-500"><span class="font-medium">Oops!</span> User already exists!</p>
       <p v-if="registeredSuccessfully" class="mt-5 text-sm text-green-600 dark:text-green-500"><span class="font-medium">Alright!</span> Registered successfully!</p>
+      <p class="mt-5 text-sm text-gray-700 dark:text-gray-400"> Do you already have an account? <router-link to="/login" class="text-blue-500">Login</router-link></p>
     </form>
   </div>
 </template>
