@@ -10,7 +10,7 @@ const activeAnimateFadeInDown = (id) => {
   document.querySelector(`#${id}`).classList.add("animate__animated", "animate__fadeInDown");
 }
 
-const props = defineProps(["loggedInUser"]);
+const props = defineProps(["store"]);
 
 </script>
 

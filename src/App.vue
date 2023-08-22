@@ -42,7 +42,7 @@ onMounted(() => {
       store.loggedInUser = {};
       localStorage.setItem("loggedInUser", "");
     }
-  }).then(() => console.log(loggedInUser.value))
+  })
 });
 
 
@@ -62,7 +62,8 @@ onMounted(() => {
   </header>
 
   <main>
-    <RouterView class="mt-[250px]" :loggedInUser="loggedInUser" />
+    <RouterView class="mt-[250px]"
+    :store="store" />
   </main>
 
   <footer>
