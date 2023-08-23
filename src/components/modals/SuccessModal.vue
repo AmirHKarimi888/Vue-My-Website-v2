@@ -5,7 +5,7 @@ const props = defineProps(["store"]);
 <template>
     <div @click.self="store.closeModal('successModal')" id="successModal" class="successModal fixed top-0 hidden w-full h-screen z-50 backdrop-blur-sm">
         <div tabindex="-1"
-            class="fixed top-[200px] left-[17%] md:left-[20%] lg:left-[36%] p-4 max-h-full">
+            class="mx-auto mt-[30%] md:left-[20%] lg:left-[36%] p-4 max-h-full">
             <div class="relative w-full max-w-md max-h-full">
                 <div class="relative border border-gray-400 bg-white rounded-lg shadow dark:bg-gray-700">
                     <button type="button"
