@@ -49,13 +49,22 @@ const openUploader = () => {
 };
 
 const createPost = () => {
+  const max = ref(0);
+  posts.value.map((post) => {
+    max.value = Math.max(post.sid);
+  })
+
   const newPost = {
-    id: posts.value.length + 1,
-    sid: posts.value.length + 1,
+    id: max.value + 1,
+    sid: max.value + 1,
     auther: store.loggedInUser.email,
     poster: media.value,
     title: title.value,
     contents: [],
+    likedBy: [],
+    likes: 0,
+    views: 0,
+    comments: [],
     editStatus: false,
   };
 
@@ -134,6 +143,17 @@ const editPostHeader = () => {
     });
 };
 
+const deletePost = (id) => {
+  Action.delete(url + "posts/" + id)
+  .then(() => {
+    posts.value = posts.value.filter((post) => {
+      if(post.id != id) {
+        return post;
+      }
+    })
+  })
+}
+
 
 
 
@@ -167,8 +187,13 @@ const openEditMore = (sid) => {
 };
 
 const createSection = (id) => {
+  const max = ref(0);
+  selectedPost.value.contents.map((post) => {
+    max.value = Math.max(post.id);
+  })
+
   const newSection = {
-    id: selectedPost.value.contents.length + 1,
+    id: max.value + 1,
     type: type.value,
     text: text.value,
     media: media.value,
@@ -254,6 +279,20 @@ const editSection = (id) => {
     });
 };
 
+const deleteSection = (id) => {
+  Action.delete(url + "posts/" + selectedPost.value.id)
+  .then(() => {
+    selectedPost.value.contents = selectedPost.value.contents.filter((section) => {
+      if(section.id != id) {
+        return section;
+      }
+    })
+  })
+  .then(() => {
+    Action.post(url + "posts", selectedPost.value)
+  })
+}
+
 const cancelEditing = () => {
   selectedPost.value = {};
   document.querySelector("#editing").classList.add("hidden");
@@ -302,14 +341,14 @@ const cancelEditing = () => {
         <li v-for="(post, index) in posts" :key="index"
           class="border border-gray-400 dark:border-gray-600 p-5 shadow-lg aspect-square max-w-1/3 rounded-lg">
           <div class="my-5 mx-auto text-center">
-            <button class="mx-2">
+            <button class="mx-3">
               <i @click="startEditingPostHeader(post.id, post.sid)" :class="post.editStatus
                   ? 'text-green-500'
                   : 'text-gray-600 dark:text-white'
                 " class="fa fa-edit"></i>
             </button>
 
-            <button class="mx-2">
+            <button @click="deletePost(post.id)" class="mx-3">
               <i class="fa fa-trash text-red-500"></i>
             </button>
           </div>
@@ -419,14 +458,14 @@ const cancelEditing = () => {
               <iframe v-if="section.type == 'iframe'" :class="section.style" :src="section.media"></iframe>
 
               <div class="my-5 mx-auto text-center">
-                <button class="mx-2">
-                  <i @click="startEditingSection(parseInt(section.id))" :class="section.editStatus
+                <button @click="startEditingSection(section.id)" class="mx-2">
+                  <i :class="section.editStatus
                       ? 'text-green-500'
                       : 'text-gray-600 dark:text-white'
                     " class="fa fa-edit"></i>
                 </button>
 
-                <button class="mx-2">
+                <button @click="deleteSection(section.id)" class="mx-2">
                   <i class="fa fa-trash text-red-500"></i>
                 </button>
               </div>
