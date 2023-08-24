@@ -11,7 +11,6 @@ const apiKey = "AWOK4L9h4SROT147VanQQz";
 const client = filestack.init(apiKey);
 
 const posts = ref([]);
-const selectedPost = ref({});
 
 const title = ref("");
 const type = ref("type");
@@ -25,7 +24,7 @@ onMounted(() => {
     posts.value = response.data;
     posts.value.sort((a, b) => {
       return parseInt(a.sid) - parseInt(b.sid);
-    })
+    });
   });
 });
 
@@ -40,8 +39,10 @@ const openUploader = () => {
       },
       onUploadDone: async (data) => {
         media.value = data.filesUploaded[0].url;
-        document.querySelector("#fileLink").innerHTML = data.filesUploaded[0].url;
-        document.querySelector("#postFileLink").innerHTML = data.filesUploaded[0].url;
+        document.querySelector("#fileLink").innerHTML =
+          data.filesUploaded[0].url;
+        document.querySelector("#postFileLink").innerHTML =
+          data.filesUploaded[0].url;
       },
     })
     .open();
@@ -55,78 +56,115 @@ const createPost = () => {
     poster: media.value,
     title: title.value,
     contents: [],
-    editStatus: false
+    editStatus: false,
   };
 
-  Action.post(url + "posts", newPost).then(() => {
-    posts.value = [...posts.value, newPost];
-  })
+  Action.post(url + "posts", newPost)
+    .then(() => {
+      posts.value = [...posts.value, newPost];
+    })
     .then(() => {
       title.value = "";
       media.value = "";
-    })
-};
-
-const openEditMore = (id) => {
-  selectedPost.value = posts.value[id - 1];
-  document.querySelector("#editing").classList.remove("hidden");
-  document.querySelector("body").classList.add("overflow-y-hidden");
+    });
 };
 
 const globalId = ref(0);
-const startEditingPostHeader = (id) => {
-  if(posts.value[parseInt(id) - 1].editStatus == false) {
-    posts.value[parseInt(id) - 1].editStatus = true;
-    globalEditStatus.value = true;
-    globalId.value = id;
-    title.value = posts.value[parseInt(id) - 1].title;
-    poster.value = posts.value[parseInt(id) - 1].poster;
-  } else {
-    posts.value[parseInt(id) - 1].editStatus = false;
-    globalEditStatus.value = false;
-    globalId.value = 0;
-    title.value = "";
-    poster.value = "";
-  }
+const globalSid = ref(0);
+const startEditingPostHeader = (id, sid) => {
 
-}
+  posts.value.filter((post) => {
+    if (post.sid === sid) {
+      if (post.editStatus == false) {
+        post.editStatus = true;
+        globalEditStatus.value = true;
+        globalId.value = id;
+        globalSid.value = sid;
+        title.value = post.title;
+        media.value = post.poster;
+      } else {
+        post.editStatus = false;
+        globalEditStatus.value = false;
+        globalId.value = 0;
+        globalSid.value = 0;
+        title.value = "";
+        media.value = "";
+      }
+    }
+  });
+};
 
 const editPostHeader = () => {
-  const newPost = {
-    id: globalId.value,
-    auther: store.loggedInUser.email,
-    poster: media.value,
-    title: title.value,
-    contents: posts.value[parseInt(globalId) - 1],
-    editStatus: false
-  };
+  let contents = ref([]);
+  posts.value.filter((post) => {
+    if (post.sid == globalSid.value) {
+      contents.value = post.contents;
+    }
+  });
 
   Action.delete(url + "posts/" + globalId.value)
-  .then(() => {
-    Action.post(url + "posts", {
-    sid: parseInt(globalId.value).toString(),
-    auther: store.loggedInUser.email,
-    poster: media.value,
-    title: title.value,
-    contents: posts.value[parseInt(globalId.value) - 1].contents,
-    editStatus: false
-  })
-  })
-  .then(() => {
-    posts.value[parseInt(globalId.value) - 1].title = title.value;
-    posts.value[parseInt(globalId.value) - 1].poster = poster.value;
-  })
-  .then(() => {
-    posts.value[parseInt(globalId.value) - 1].editStatus = false;
-    globalEditStatus.value = false;
-    globalId.value = 0;
-    title.value = "";
-    poster.value = "";
-  })
-}
+    .then(() => {
+      Action.post(url + "posts", {
+        sid: parseInt(globalSid.value),
+        auther: store.loggedInUser.email,
+        poster: media.value,
+        title: title.value,
+        contents: contents.value,
+        editStatus: false,
+      });
+    })
+    .then(() => {
+      posts.value.filter((post) => {
+        if (post.sid == globalSid.value) {
+          post.title = title.value;
+          post.poster = media.value;
+        }
+      });
+    })
+    .then(() => {
+      posts.value.filter((post) => {
+        if (post.sid == globalSid.value) {
+          post.editStatus = false;
+        }
+      });
+      globalEditStatus.value = false;
+      globalId.value = 0;
+      title.value = "";
+      media.value = "";
+    });
+};
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+const selectedPost = ref({});
+
+const openEditMore = (sid) => {
+  posts.value.filter((post) => {
+    if (post.sid == sid) {
+      selectedPost.value = post;
+    }
+  });
+  document.querySelector("#editing").classList.remove("hidden");
+  document.querySelector("body").classList.add("overflow-y-hidden");
+};
 
 const createSection = (id) => {
   const newSection = {
@@ -135,44 +173,48 @@ const createSection = (id) => {
     text: text.value,
     media: media.value,
     style: style.value,
-    editStatus: false
-  }
+    editStatus: false,
+  };
 
   Action.delete(url + "posts/" + id)
     .then(() => {
       selectedPost.value.contents.push(newSection);
     })
     .then(() => {
-      Action.post(url + "posts", selectedPost.value)
+      Action.post(url + "posts", selectedPost.value);
     })
     .then(() => {
       type.value = "";
       text.value = "";
       media.value = "";
       style.value = "";
-    })
-}
+    });
+};
 
-
-const selectedSectionId = ref("");
+const selectedSectionId = ref(0);
 const startEditingSection = (id) => {
-  selectedPost.value.contents[id - 1].editStatus = !selectedPost.value.contents[id - 1].editStatus;
-  globalEditStatus.value = !globalEditStatus.value;
-
-  if (selectedPost.value.contents[id - 1].editStatus) {
-    selectedSectionId.value = id - 1;
-    type.value = selectedPost.value.contents[id - 1].type;
-    text.value = selectedPost.value.contents[id - 1].text;
-    media.value = selectedPost.value.contents[id - 1].media;
-    style.value = selectedPost.value.contents[id - 1].style;
-  } else {
-    selectedSectionId.value = "";
-    type.value = "";
-    text.value = "";
-    media.value = "";
-    style.value = "";
-  }
-}
+  selectedPost.value.contents.filter((section) => {
+    if (section.id == id) {
+      if (section.editStatus == false) {
+        section.editStatus = true;
+        globalEditStatus.value = true;
+        selectedSectionId.value = section.id;
+        type.value = section.type;
+        text.value = section.text;
+        media.value = section.media;
+        style.value = section.style;
+      } else {
+        section.editStatus = false;
+        globalEditStatus.value = false;
+        selectedSectionId.value = 0;
+        type.value = "";
+        text.value = "";
+        media.value = "";
+        style.value = "";
+      }
+    }
+  });
+};
 
 const editSection = (id) => {
   const editedSection = {
@@ -181,38 +223,48 @@ const editSection = (id) => {
     text: text.value,
     media: media.value,
     style: style.value,
-    editStatus: false
-  }
+    editStatus: false,
+  };
 
   Action.delete(url + "posts/" + id)
-    .then(() => {
-      selectedPost.value.contents.splice(selectedSectionId.value, 1);
+  .then(() => {
+    selectedPost.value.contents.filter((section) => {
+      if(section.id == selectedSectionId.value) {
+        section.type = type.value;
+        section.text = text.value;
+        section.media = media.value;
+        section.style = style.value;
+        section.editStatus = false;
+      }
     })
-    .then(() => {
-      selectedPost.value.contents.push(editedSection);
-    })
-    .then(() => {
+  })
+  .then(() => {
       selectedPost.value.contents.sort((a, b) => {
         return a.id - b.id;
-      })
+      });
     })
     .then(() => {
-      Action.post(url + "posts", selectedPost.value)
+      Action.post(url + "posts", selectedPost.value);
     })
     .then(() => {
       type.value = "";
       text.value = "";
       media.value = "";
       style.value = "";
-
-    })
-    .then(() => {
-      selectedPost.value.contents[id - 1].editStatus = false;
       globalEditStatus.value = false;
-    })
-}
+
+      selectedPost.value.contents.filter((section) => {
+        if (section.id == selectedSectionId.value) {
+          section.editStatus = false;
+        }
+      });
+
+      selectedSectionId.value = 0;
+    });
+};
 
 const cancelEditing = () => {
+  selectedPost.value = {};
   document.querySelector("#editing").classList.add("hidden");
   document.querySelector("body").classList.remove("overflow-y-hidden");
 };
@@ -240,16 +292,17 @@ const cancelEditing = () => {
           class="text-white bg-gradient-to-r from-pink-400 via-pink-500 to-pink-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-pink-300 dark:focus:ring-pink-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2">
           Click to upload the poster
         </button>
-        <p class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">File Link: <a id="fileLink"
-            :href="media"></a></p>
+        <p class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+          File Link: <a id="fileLink" :href="media"></a>
+        </p>
       </div>
       <button v-if="!globalEditStatus" @click="createPost" type="button"
         class="text-white bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2">
         Create Post
       </button>
       <button v-if="globalEditStatus" @click="editPostHeader" type="button"
-            class="text-white bg-gradient-to-br from-green-400 to-blue-600 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-green-200 dark:focus:ring-green-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2">
-            Edit Post Header
+        class="text-white bg-gradient-to-br from-green-400 to-blue-600 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-green-200 dark:focus:ring-green-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2">
+        Edit Post Header
       </button>
     </form>
 
@@ -258,15 +311,17 @@ const cancelEditing = () => {
         <li v-for="(post, index) in posts" :key="index"
           class="border border-gray-400 dark:border-gray-600 p-5 shadow-lg aspect-square max-w-1/3 rounded-lg">
           <div class="my-5 mx-auto text-center">
-              <button class="mx-2">
-                <i @click="startEditingPostHeader(post.sid)"
-                  :class="post.editStatus ? 'text-green-500' : 'text-gray-600 dark:text-white'" class="fa fa-edit"></i>
-              </button>
+            <button class="mx-2">
+              <i @click="startEditingPostHeader(post.id, post.sid)" :class="post.editStatus
+                  ? 'text-green-500'
+                  : 'text-gray-600 dark:text-white'
+                " class="fa fa-edit"></i>
+            </button>
 
-              <button class="mx-2">
-                <i class="fa fa-trash text-red-500"></i>
-              </button>
-            </div>
+            <button class="mx-2">
+              <i class="fa fa-trash text-red-500"></i>
+            </button>
+          </div>
           <p class="my-5 text-right text-gray-600 dark:text-gray-300">
             {{ post?.createdAt }}
           </p>
@@ -293,7 +348,7 @@ const cancelEditing = () => {
             <label for="countries" class="block mt-5 mb-2 text-sm font-medium text-gray-900 dark:text-white">Tag
               Type</label>
             <select v-model="type" id="countries"
-              class=" bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+              class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
               <option value="text">Text</option>
               <option value="link">Link</option>
               <option value="image">Image</option>
@@ -321,8 +376,9 @@ const cancelEditing = () => {
               class="text-white bg-gradient-to-r from-pink-400 via-pink-500 to-pink-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-pink-300 dark:focus:ring-pink-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2">
               Click to upload what you want
             </button>
-            <p class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">File Link: <a id="postFileLink"
-                :href="media"></a></p>
+            <p class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+              File Link: <a id="postFileLink" :href="media"></a>
+            </p>
           </div>
           <button @click="createSection(parseInt(selectedPost.id))" v-if="!globalEditStatus" type="button"
             class="text-white bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2">
@@ -336,7 +392,9 @@ const cancelEditing = () => {
 
         <div class="postContents">
           <div class="postHeader">
-            <p class=" text-[200%] text-center text-gray-600 dark:text-gray-300">Header</p>
+            <p class="text-[200%] text-center text-gray-600 dark:text-gray-300">
+              Header
+            </p>
             <p class="mt-5 text-center text-gray-600 dark:text-gray-300">
               {{ selectedPost?.title }}
             </p>
@@ -348,25 +406,29 @@ const cancelEditing = () => {
           </div>
 
           <div class="postBody">
-            <p class="mt-10 text-[200%] text-center text-gray-600 dark:text-gray-300">Body</p>
+            <p class="mt-10 text-[200%] text-center text-gray-600 dark:text-gray-300">
+              Body
+            </p>
             <div v-for="(section, index) in selectedPost.contents" :key="index">
-
-              <p v-if="section.type == 'text'" :class="section.style">{{ section.text }}</p>
+              <p v-if="section.type == 'text'" :class="section.style">
+                {{ section.text }}
+              </p>
               <a v-if="section.type == 'link'" :class="section.style" :href="section.media">{{ section.text }}</a>
               <img v-if="section.type == 'image'" :class="section.style" :alt="section.text" :src="section.media" />
               <audio v-if="section.type == 'audio'" :class="section.style" controls>
-                <source :src="section.media" type="audio/mpeg">
+                <source :src="section.media" type="audio/mpeg" />
               </audio>
               <video v-if="section.type == 'video'" :class="section.style" controls>
-                <source :src="section.media" type="video/mp4">
+                <source :src="section.media" type="video/mp4" />
               </video>
               <iframe v-if="section.type == 'iframe'" :class="section.style" :src="section.media"></iframe>
 
               <div class="my-5 mx-auto text-center">
                 <button class="mx-2">
-                  <i @click="startEditingSection(parseInt(section.sid))"
-                    :class="section.editStatus ? 'text-green-500' : 'text-gray-600 dark:text-white'"
-                    class="fa fa-edit"></i>
+                  <i @click="startEditingSection(parseInt(section.id))" :class="section.editStatus
+                      ? 'text-green-500'
+                      : 'text-gray-600 dark:text-white'
+                    " class="fa fa-edit"></i>
                 </button>
 
                 <button class="mx-2">
@@ -375,7 +437,6 @@ const cancelEditing = () => {
               </div>
             </div>
           </div>
-
         </div>
 
         <div class="mx-auto text-center mt-5">
