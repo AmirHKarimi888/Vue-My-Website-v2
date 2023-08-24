@@ -217,15 +217,6 @@ const startEditingSection = (id) => {
 };
 
 const editSection = (id) => {
-  const editedSection = {
-    id: selectedSectionId.value + 1,
-    type: type.value,
-    text: text.value,
-    media: media.value,
-    style: style.value,
-    editStatus: false,
-  };
-
   Action.delete(url + "posts/" + id)
   .then(() => {
     selectedPost.value.contents.filter((section) => {
@@ -413,7 +404,11 @@ const cancelEditing = () => {
               <p v-if="section.type == 'text'" :class="section.style">
                 {{ section.text }}
               </p>
-              <a v-if="section.type == 'link'" :class="section.style" :href="section.media">{{ section.text }}</a>
+
+              <div v-if="section.type == 'link'" :class="section.style">
+                <a :href="section.media">{{ section.text }}</a>
+              </div>
+
               <img v-if="section.type == 'image'" :class="section.style" :alt="section.text" :src="section.media" />
               <audio v-if="section.type == 'audio'" :class="section.style" controls>
                 <source :src="section.media" type="audio/mpeg" />
@@ -440,10 +435,6 @@ const cancelEditing = () => {
         </div>
 
         <div class="mx-auto text-center mt-5">
-          <button type="button"
-            class="text-white bg-gradient-to-br from-green-400 to-blue-600 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-green-200 dark:focus:ring-green-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2">
-            Finish Editing
-          </button>
           <button @click="cancelEditing" type="button"
             class="text-white bg-gradient-to-r from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2">
             Cancel Editing
