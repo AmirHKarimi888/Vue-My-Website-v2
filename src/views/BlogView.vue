@@ -14,6 +14,7 @@ onMounted(() => {
         posts.value.sort((a, b) => {
             return parseInt(a.sid) - parseInt(b.sid);
         });
+        posts.value.reverse();
     });
 });
 

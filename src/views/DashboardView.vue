@@ -25,6 +25,7 @@ onMounted(() => {
     posts.value.sort((a, b) => {
       return parseInt(a.sid) - parseInt(b.sid);
     });
+    posts.value.reverse();
   });
 });
 
@@ -49,14 +50,23 @@ const openUploader = () => {
 };
 
 const createPost = () => {
-  const max = ref(0);
-  posts.value.map((post) => {
-    max.value = Math.max(post.sid);
-  })
+  // const max = ref(0);
+  // posts.value.map((post) => {
+  //   max.value = Math.max(post.sid);
+  // })
+
+
+  let initial = 0;
+  for(let post of posts.value) {
+    if(post.sid > initial) {
+      initial = post.sid;
+    }
+  }
+  console.log(initial)
 
   const newPost = {
-    id: max.value + 1,
-    sid: max.value + 1,
+    id: initial + 1,
+    sid: initial + 1,
     auther: store.loggedInUser.email,
     poster: media.value,
     title: title.value,
@@ -75,7 +85,13 @@ const createPost = () => {
     .then(() => {
       title.value = "";
       media.value = "";
-    });
+    })
+    .then(() => {
+      posts.value.sort((a, b) => {
+        return a.sid - b.sid;
+      })
+      posts.value.reverse();
+    })
 };
 
 const globalId = ref(0);
@@ -187,13 +203,16 @@ const openEditMore = (sid) => {
 };
 
 const createSection = (id) => {
-  const max = ref(0);
-  selectedPost.value.contents.map((post) => {
-    max.value = Math.max(post.id);
-  })
+  let initial = 0;
+  for(let section of selectedPost.value.contents) {
+    if(section.id > initial) {
+      initial = section.id;
+    }
+  }
+  console.log(initial)
 
   const newSection = {
-    id: max.value + 1,
+    id: initial + 1,
     type: type.value,
     text: text.value,
     media: media.value,
