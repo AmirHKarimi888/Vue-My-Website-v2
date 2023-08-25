@@ -303,7 +303,7 @@ const cancelEditing = () => {
 <template>
   <div class="dashboard">
     <form v-if="store.loggedInUser.admin"
-      class="mx-auto w-[400px] shadow-lg border border-gray-400 dark:border-gray-600 p-9 rounded-lg">
+      class="mx-auto w-[400px] shadow-lg border border-gray-400 dark:border-gray-600 p-9 rounded-lg bg-white dark:bg-slate-800">
       <div class="mb-6">
         <label for="title" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Title</label>
         <input v-model="title" type="text" id="title"
@@ -336,10 +336,10 @@ const cancelEditing = () => {
       </button>
     </form>
 
-    <div class="posts mt-32 w-[66%] mx-auto">
+    <div v-if="store.loggedInUser.admin" class="posts mt-32 w-[66%] mx-auto">
       <ul class="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         <li v-for="(post, index) in posts" :key="index"
-          class="border border-gray-400 dark:border-gray-600 p-5 shadow-lg aspect-square max-w-1/3 rounded-lg">
+          class="border border-gray-400 dark:border-gray-600 p-5 shadow-lg aspect-square max-w-1/3 rounded-lg bg-white dark:bg-slate-800">
           <div class="my-5 mx-auto text-center">
             <button class="mx-3">
               <i @click="startEditingPostHeader(post.id, post.sid)" :class="post.editStatus
