@@ -49,12 +49,34 @@ const openUploader = () => {
     .open();
 };
 
+var today = new Date();
+  var dd = String(today.getDate()).padStart(2, '0');
+  var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+  var yyyy = today.getFullYear();
+
+  today = mm + '/' + dd + '/' + yyyy;
+
+  function formatAMPM(date) {
+  var hours = date.getHours();
+  var minutes = date.getMinutes();
+  var ampm = hours >= 12 ? 'pm' : 'am';
+  hours = hours % 12;
+  hours = hours ? hours : 12; // the hour '0' should be '12'
+  minutes = minutes < 10 ? '0'+minutes : minutes;
+  var strTime = hours + ':' + minutes + ' ' + ampm;
+  return strTime;
+  }
+
+
+
+
+
+
 const createPost = () => {
   // const max = ref(0);
   // posts.value.map((post) => {
   //   max.value = Math.max(post.sid);
   // })
-
 
   let initial = 0;
   for(let post of posts.value) {
@@ -68,13 +90,15 @@ const createPost = () => {
     id: initial + 1,
     sid: initial + 1,
     auther: store.loggedInUser.email,
+    created: today + " at " + formatAMPM(new Date),
+    edited: "",
     poster: media.value,
     title: title.value,
-    contents: [],
     likedBy: [],
     likes: 0,
     views: 0,
     comments: [],
+    contents: [],
     editStatus: false,
   };
 
@@ -96,6 +120,8 @@ const createPost = () => {
 
 const globalId = ref(0);
 const globalSid = ref(0);
+const selectedPost = ref({});
+
 const startEditingPostHeader = (id, sid) => {
 
   posts.value.filter((post) => {
@@ -105,6 +131,7 @@ const startEditingPostHeader = (id, sid) => {
         globalEditStatus.value = true;
         globalId.value = id;
         globalSid.value = sid;
+        selectedPost.value = post;
         title.value = post.title;
         media.value = post.poster;
       } else {
@@ -112,6 +139,7 @@ const startEditingPostHeader = (id, sid) => {
         globalEditStatus.value = false;
         globalId.value = 0;
         globalSid.value = 0;
+        selectedPost.value = "";
         title.value = "";
         media.value = "";
       }
@@ -120,27 +148,28 @@ const startEditingPostHeader = (id, sid) => {
 };
 
 const editPostHeader = () => {
-  let contents = ref([]);
-  posts.value.filter((post) => {
-    if (post.sid == globalSid.value) {
-      contents.value = post.contents;
-    }
-  });
+
+  // let contents = ref([]);
+  // posts.value.filter((post) => {
+  //   if (post.sid == globalSid.value) {
+  //     contents.value = post.contents;
+  //   }
+  // });
 
   Action.delete(url + "posts/" + globalId.value)
     .then(() => {
       Action.post(url + "posts", {
-        sid: parseInt(globalSid.value),
-        auther: store.loggedInUser.email,
+        ...selectedPost.value, 
+        edited: today + " at " + formatAMPM(new Date),
         poster: media.value,
         title: title.value,
-        contents: contents.value,
         editStatus: false,
       });
     })
     .then(() => {
       posts.value.filter((post) => {
         if (post.sid == globalSid.value) {
+          post.edited = today + " at " + formatAMPM(new Date);
           post.title = title.value;
           post.poster = media.value;
         }
@@ -153,7 +182,9 @@ const editPostHeader = () => {
         }
       });
       globalEditStatus.value = false;
+      selectedPost.value = {};
       globalId.value = 0;
+      globalSid.value = 0;
       title.value = "";
       media.value = "";
     });
@@ -190,7 +221,7 @@ const deletePost = (id) => {
 
 
 
-const selectedPost = ref({});
+
 
 const openEditMore = (sid) => {
   posts.value.filter((post) => {
@@ -209,7 +240,6 @@ const createSection = (id) => {
       initial = section.id;
     }
   }
-  console.log(initial)
 
   const newSection = {
     id: initial + 1,
@@ -223,6 +253,7 @@ const createSection = (id) => {
   Action.delete(url + "posts/" + id)
     .then(() => {
       selectedPost.value.contents.push(newSection);
+      selectedPost.value.edited = today + " at " + formatAMPM(new Date);
     })
     .then(() => {
       Action.post(url + "posts", selectedPost.value);
@@ -263,6 +294,7 @@ const startEditingSection = (id) => {
 const editSection = (id) => {
   Action.delete(url + "posts/" + id)
   .then(() => {
+    selectedPost.value.edited = today + " at " + formatAMPM(new Date);
     selectedPost.value.contents.filter((section) => {
       if(section.id == selectedSectionId.value) {
         section.type = type.value;
@@ -321,8 +353,14 @@ const cancelEditing = () => {
 
 <template>
   <div class="dashboard">
+    <div class="mx-auto w-[400px] shadow-lg text-center text-gray-600 dark:text-white border border-gray-400 dark:border-gray-600 p-9 rounded-lg bg-white dark:bg-slate-800">
+      <img class="w-20 h-20 rounded-full mx-auto border" :src="store.loggedInUser.avatar" alt="Rounded avatar">
+        <h4 class="mt-2">{{ store.loggedInUser.username }}</h4>
+        <p class="mt-2">{{ store.loggedInUser.email }}</p>
+        <p v-if="store.loggedInUser.admin" class="mt-2 text-green-500">Admin</p>
+    </div>
     <form v-if="store.loggedInUser.admin"
-      class="mx-auto w-[400px] shadow-lg border border-gray-400 dark:border-gray-600 p-9 rounded-lg bg-white dark:bg-slate-800">
+      class="mx-auto w-[400px] mt-32 shadow-lg border border-gray-400 dark:border-gray-600 p-9 rounded-lg bg-white dark:bg-slate-800">
       <div class="mb-6">
         <label for="title" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Title</label>
         <input v-model="title" type="text" id="title"
@@ -372,7 +410,10 @@ const cancelEditing = () => {
             </button>
           </div>
           <p class="my-5 text-right text-gray-600 dark:text-gray-300">
-            {{ post?.createdAt }}
+            {{ post?.created }}
+          </p>
+          <p class="my-5 text-right text-gray-600 dark:text-gray-300">
+            {{ post?.edited }}
           </p>
           <img :src="post?.poster" alt="" class="mx-auto w-[90%] aspect-square" />
           <p class="mt-5 text-center text-gray-600 dark:text-gray-300">
@@ -449,7 +490,16 @@ const cancelEditing = () => {
             </p>
 
             <p class="my-5 text-center text-gray-600 dark:text-gray-300">
-              {{ selectedPost?.createdAt }}
+              Created At: {{ selectedPost?.created }}
+            </p>
+            <p class="my-5 text-center text-gray-600 dark:text-gray-300">
+              Edited At: {{ selectedPost?.edited }}
+            </p>
+            <p class="my-5 text-center text-gray-600 dark:text-gray-300">
+              {{ selectedPost?.views }} Views
+            </p>
+            <p class="my-5 text-center text-gray-600 dark:text-gray-300">
+              {{ selectedPost?.likes }} Likes
             </p>
             <img :src="selectedPost?.poster" alt="" class="mx-auto w-[90%] aspect-square" />
           </div>

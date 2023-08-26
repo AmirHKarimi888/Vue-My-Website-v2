@@ -59,7 +59,7 @@ const props = defineProps(["store"]);
               <span class="ml-3">Dashboard</span>
             </router-link>
           </li>
-          <li>
+          <!-- <li>
             <a
               href="#"
               class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
@@ -67,7 +67,7 @@ const props = defineProps(["store"]);
               <i class="fa fa-user"></i>
               <span class="flex-1 ml-3 whitespace-nowrap">Users</span>
             </a>
-          </li>
+          </li> -->
 
           <li @click="store.openModal('askBeforeModal', 'signOut')">
             <a
