@@ -353,14 +353,14 @@ const cancelEditing = () => {
 
 <template>
   <div class="dashboard">
-    <div class="mx-auto w-[400px] shadow-lg text-center text-gray-600 dark:text-white border border-gray-400 dark:border-gray-600 p-9 rounded-lg bg-white dark:bg-slate-800">
+    <div class="mx-auto w-[330px] shadow-lg text-center text-gray-600 dark:text-white border border-gray-400 dark:border-gray-600 p-9 rounded-lg bg-white dark:bg-slate-800">
       <img class="w-20 h-20 rounded-full mx-auto border" :src="store.loggedInUser.avatar" alt="Rounded avatar">
         <h4 class="mt-2">{{ store.loggedInUser.username }}</h4>
         <p class="mt-2">{{ store.loggedInUser.email }}</p>
         <p v-if="store.loggedInUser.admin" class="mt-2 text-green-500">Admin</p>
     </div>
     <form v-if="store.loggedInUser.admin"
-      class="mx-auto w-[400px] mt-32 shadow-lg border border-gray-400 dark:border-gray-600 p-9 rounded-lg bg-white dark:bg-slate-800">
+      class="mx-auto w-[330px] mt-32 shadow-lg border border-gray-400 dark:border-gray-600 p-9 rounded-lg bg-white dark:bg-slate-800">
       <div class="mb-6">
         <label for="title" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Title</label>
         <input v-model="title" type="text" id="title"

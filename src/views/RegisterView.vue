@@ -81,7 +81,7 @@ const registerUser = handleSubmit((data) => {
   <div class="register">
     <form
       @submit="registerUser"
-      class="mx-auto w-[400px] shadow-lg border border-gray-400 dark:border-gray-600 p-9 rounded-lg"
+      class="mx-auto w-[330px] shadow-lg border border-gray-400 dark:border-gray-600 p-9 rounded-lg"
     >
       <div class="mb-6">
         <label

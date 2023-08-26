@@ -50,7 +50,7 @@ const loginUser = handleSubmit((data) => {
 
 <template>
   <div class="login">
-    <form @submit="loginUser" class="mx-auto w-[400px] shadow-lg border border-gray-400 dark:border-gray-600 p-9 rounded-lg">
+    <form @submit="loginUser" class="mx-auto w-[330px] shadow-lg border border-gray-400 dark:border-gray-600 p-9 rounded-lg">
       <div class="mb-6">
         <label
           for="email"
