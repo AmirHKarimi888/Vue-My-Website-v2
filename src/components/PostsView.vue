@@ -38,15 +38,15 @@ const openPost = (id) => {
     document.querySelector("#post").classList.remove("hidden");
     document.querySelector("body").classList.add("overflow-y-hidden");
 
-    setTimeout(() => {
-        Action.delete(url + "posts/" + selectedPost.value.id)
-            .then(() => {
-                selectedPost.value.views = parseInt(selectedPost.value.views) + 1;
-            })
-            .then(() => {
-                Action.post(url + "posts", selectedPost.value);
-            })
-    }, 6000)
+    // setTimeout(() => {
+    //     Action.delete(url + "posts/" + selectedPost.value.id)
+    //         .then(() => {
+    //             selectedPost.value.views = parseInt(selectedPost.value.views) + 1;
+    //         })
+    //         .then(() => {
+    //             Action.post(url + "posts", selectedPost.value);
+    //         })
+    // }, 6000)
 }
 
 const closePost = () => {
@@ -55,8 +55,10 @@ const closePost = () => {
     document.querySelector("body").classList.remove("overflow-y-hidden");
 }
 
+const likeAlert = ref(false);
 const likePost = () => {
-    Action.delete(url + "posts/" + selectedPost.value.id)
+    if(store.isLoggedIn) {
+        Action.delete(url + "posts/" + selectedPost.value.id)
         .then(() => {
             if (!selectedPost.value.likedBy.includes(store.loggedInUser.email)) {
                 selectedPost.value.likedBy.push(store.loggedInUser.email);
@@ -75,6 +77,9 @@ const likePost = () => {
         .then(() => {
             Action.post(url + "posts", selectedPost.value);
         })
+    } else {
+        likeAlert.value = true;
+    }
 }
 
 </script>
@@ -92,7 +97,7 @@ const likePost = () => {
         <div @click.self="closePost" id="post"
             class="post overflow-y-scroll hidden fixed top-0 w-full z-50 h-screen backdrop-blur-md">
             <div
-                class="my-10 p-3 rounded-lg mx-auto w-[75%] border border-gray-400 dark:border-gray-600 bg-gray-100 dark:bg-gray-700">
+                class="my-10 p-3 rounded-lg mx-auto w-[90%] border border-gray-400 dark:border-gray-600 bg-gray-100 dark:bg-gray-700">
 
                 <div class="postContents">
                     <div class="postHeader">
@@ -105,7 +110,7 @@ const likePost = () => {
                             <li><i class="fa fa-clock-o"></i> {{ selectedPost?.created }}</li>
                             <li><i class="fa fa-edit"></i> {{ selectedPost?.edited }}</li>
                             <li><i class="fa fa-user"></i> {{ selectedPost?.auther }}</li>
-                            <li><i class="fa fa-eye"></i> {{ selectedPost?.views }}</li>
+                            <!-- <li><i class="fa fa-eye"></i> {{ selectedPost?.views }}</li> -->
                             <li><i class="fa fa-heart"></i> {{ selectedPost?.likes }}</li>
                         </ul>
                     </div>
@@ -138,6 +143,7 @@ const likePost = () => {
                             <i class="text-[150%] hover:text-red-500"
                                 :class="isLiked ? 'fa fa-heart text-red-500' : 'fa fa-heart-o'"></i>
                         </button>
+                        <p v-if="likeAlert" class="text-red-500 ml-[5%] mt-1 mb-1">Register and login to like the posts! <a href="/register" class="text-blue-500">Register</a></p>
                     </div>
                 </div>
 

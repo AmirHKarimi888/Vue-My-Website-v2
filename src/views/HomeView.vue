@@ -143,14 +143,9 @@ const props = defineProps(["store"]);
       </div>
     </section>
 
-    <section @mouseenter="activeAnimateFadeInUp('lastPostsContent')"
-      @touchstart="activeAnimateFadeInUp('lastPostsContent')" id="lastPosts">
-      <div id="lastPostsContent">
-        <p class="mt-40 text-center text-[180%] text-gray-600 dark:text-white">
-          Last Posts
-        </p>
-        <LastPostsView class="mt-10" />
-      </div>
-    </section>
+    <p class="mt-40 mb-10 text-center text-[180%] text-gray-600 dark:text-white">
+      Last Posts
+    </p>
+    <LastPostsView />
   </div>
 </template>

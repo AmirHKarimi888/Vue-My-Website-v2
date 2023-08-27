@@ -84,7 +84,6 @@ const createPost = () => {
       initial = post.sid;
     }
   }
-  console.log(initial)
 
   const newPost = {
     id: initial + 1,
