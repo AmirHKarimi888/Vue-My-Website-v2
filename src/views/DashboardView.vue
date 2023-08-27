@@ -50,37 +50,27 @@ const openUploader = () => {
 };
 
 var today = new Date();
-  var dd = String(today.getDate()).padStart(2, '0');
-  var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
-  var yyyy = today.getFullYear();
+var dd = String(today.getDate()).padStart(2, "0");
+var mm = String(today.getMonth() + 1).padStart(2, "0"); //January is 0!
+var yyyy = today.getFullYear();
 
-  today = mm + '/' + dd + '/' + yyyy;
+today = mm + "/" + dd + "/" + yyyy;
 
-  function formatAMPM(date) {
+function formatAMPM(date) {
   var hours = date.getHours();
   var minutes = date.getMinutes();
-  var ampm = hours >= 12 ? 'pm' : 'am';
+  var ampm = hours >= 12 ? "pm" : "am";
   hours = hours % 12;
   hours = hours ? hours : 12; // the hour '0' should be '12'
-  minutes = minutes < 10 ? '0'+minutes : minutes;
-  var strTime = hours + ':' + minutes + ' ' + ampm;
+  minutes = minutes < 10 ? "0" + minutes : minutes;
+  var strTime = hours + ":" + minutes + " " + ampm;
   return strTime;
-  }
-
-
-
-
-
+}
 
 const createPost = () => {
-  // const max = ref(0);
-  // posts.value.map((post) => {
-  //   max.value = Math.max(post.sid);
-  // })
-
   let initial = 0;
-  for(let post of posts.value) {
-    if(post.sid > initial) {
+  for (let post of posts.value) {
+    if (post.sid > initial) {
       initial = post.sid;
     }
   }
@@ -89,7 +79,7 @@ const createPost = () => {
     id: initial + 1,
     sid: initial + 1,
     auther: store.loggedInUser.email,
-    created: today + " at " + formatAMPM(new Date),
+    created: today + " at " + formatAMPM(new Date()),
     edited: "",
     poster: media.value,
     title: title.value,
@@ -112,32 +102,31 @@ const createPost = () => {
     .then(() => {
       posts.value.sort((a, b) => {
         return a.sid - b.sid;
-      })
+      });
       posts.value.reverse();
     })
+    .then(() => {
+    store.openModal('successModal');
+  })
+  .catch(() => {
+    store.openModal('failModal');
+  })
 };
 
-const globalId = ref(0);
-const globalSid = ref(0);
 const selectedPost = ref({});
 
 const startEditingPostHeader = (id, sid) => {
-
   posts.value.filter((post) => {
     if (post.sid === sid) {
       if (post.editStatus == false) {
         post.editStatus = true;
         globalEditStatus.value = true;
-        globalId.value = id;
-        globalSid.value = sid;
         selectedPost.value = post;
         title.value = post.title;
         media.value = post.poster;
       } else {
         post.editStatus = false;
         globalEditStatus.value = false;
-        globalId.value = 0;
-        globalSid.value = 0;
         selectedPost.value = "";
         title.value = "";
         media.value = "";
@@ -147,63 +136,51 @@ const startEditingPostHeader = (id, sid) => {
 };
 
 const editPostHeader = () => {
-
-  // let contents = ref([]);
-  // posts.value.filter((post) => {
-  //   if (post.sid == globalSid.value) {
-  //     contents.value = post.contents;
-  //   }
-  // });
-
-  Action.delete(url + "posts/" + globalId.value)
-    .then(() => {
-      Action.post(url + "posts", {
-        ...selectedPost.value, 
-        edited: today + " at " + formatAMPM(new Date),
-        poster: media.value,
-        title: title.value,
-        editStatus: false,
-      });
-    })
+  Action.put(url + "posts/" + selectedPost.value.id, {
+    edited: today + " at " + formatAMPM(new Date()),
+    title: title.value,
+    poster: media.value,
+    editStatus: false,
+  })
     .then(() => {
       posts.value.filter((post) => {
-        if (post.sid == globalSid.value) {
-          post.edited = today + " at " + formatAMPM(new Date);
+        if (post.sid == selectedPost.value.sid) {
+          post.edited = today + " at " + formatAMPM(new Date());
           post.title = title.value;
           post.poster = media.value;
-        }
-      });
-    })
-    .then(() => {
-      posts.value.filter((post) => {
-        if (post.sid == globalSid.value) {
           post.editStatus = false;
         }
       });
+    })
+    .then(() => {
       globalEditStatus.value = false;
       selectedPost.value = {};
-      globalId.value = 0;
-      globalSid.value = 0;
       title.value = "";
       media.value = "";
-    });
+    })
+    .then(() => {
+    store.openModal('successModal');
+  })
+  .catch(() => {
+    store.openModal('failModal');
+  })
 };
 
 const deletePost = (id) => {
-  Action.delete(url + "posts/" + id)
-  .then(() => {
+  Action.delete(url + "posts/" + id).then(() => {
     posts.value = posts.value.filter((post) => {
-      if(post.id != id) {
+      if (post.id != id) {
         return post;
       }
-    })
+    });
   })
-}
-
-
-
-
-
+  .then(() => {
+    store.openModal('successModal');
+  })
+  .catch(() => {
+    store.openModal('failModal');
+  })
+};
 
 
 
@@ -234,8 +211,8 @@ const openEditMore = (sid) => {
 
 const createSection = (id) => {
   let initial = 0;
-  for(let section of selectedPost.value.contents) {
-    if(section.id > initial) {
+  for (let section of selectedPost.value.contents) {
+    if (section.id > initial) {
       initial = section.id;
     }
   }
@@ -249,21 +226,28 @@ const createSection = (id) => {
     editStatus: false,
   };
 
-  Action.delete(url + "posts/" + id)
-    .then(() => {
-      selectedPost.value.contents.push(newSection);
-      selectedPost.value.edited = today + " at " + formatAMPM(new Date);
-    })
-    .then(() => {
-      Action.post(url + "posts", selectedPost.value);
-    })
-    .then(() => {
-      type.value = "";
-      text.value = "";
-      media.value = "";
-      style.value = "";
-    });
+  Action.put(url + "posts/" + id, {
+    contents: [...selectedPost.value.contents, newSection],
+    edited: today + " at " + formatAMPM(new Date()),
+  })
+  .then(() => {
+    selectedPost.value.contents.push(newSection);
+    selectedPost.value.edited = today + " at " + formatAMPM(new Date());
+  })
+  .then(() => {
+    type.value = "";
+    text.value = "";
+    media.value = "";
+    style.value = "";
+  })
+  .then(() => {
+    store.openModal('successModal');
+  })
+  .catch(() => {
+    store.openModal('failModal');
+  })
 };
+
 
 const selectedSectionId = ref(0);
 const startEditingSection = (id) => {
@@ -291,26 +275,27 @@ const startEditingSection = (id) => {
 };
 
 const editSection = (id) => {
-  Action.delete(url + "posts/" + id)
-  .then(() => {
-    selectedPost.value.edited = today + " at " + formatAMPM(new Date);
-    selectedPost.value.contents.filter((section) => {
-      if(section.id == selectedSectionId.value) {
-        section.type = type.value;
-        section.text = text.value;
-        section.media = media.value;
-        section.style = style.value;
-        section.editStatus = false;
-      }
-    })
+  selectedPost.value.contents.filter((section) => {
+    if (section.id == selectedSectionId.value) {
+      section.type = type.value;
+      section.text = text.value;
+      section.media = media.value;
+      section.style = style.value;
+      section.editStatus = false;
+    }
+  });
+
+  Action.put(url + "posts/" + id, {
+    contents: selectedPost.value.contents,
+    edited: today + " at " + formatAMPM(new Date()),
   })
   .then(() => {
+    selectedPost.value.edited = today + " at " + formatAMPM(new Date());
+  })
+    .then(() => {
       selectedPost.value.contents.sort((a, b) => {
         return a.id - b.id;
       });
-    })
-    .then(() => {
-      Action.post(url + "posts", selectedPost.value);
     })
     .then(() => {
       type.value = "";
@@ -326,25 +311,42 @@ const editSection = (id) => {
       });
 
       selectedSectionId.value = 0;
-    });
+    })
+    .then(() => {
+    store.openModal('successModal');
+  })
+  .catch(() => {
+    store.openModal('failModal');
+  })
 };
 
 const deleteSection = (id) => {
-  Action.delete(url + "posts/" + selectedPost.value.id)
-  .then(() => {
-    selectedPost.value.contents = selectedPost.value.contents.filter((section) => {
-      if(section.id != id) {
+  selectedPost.value.contents = selectedPost.value.contents.filter(
+    (section) => {
+      if (section.id != id) {
         return section;
       }
-    })
+    }
+  );
+
+  Action.put(url + "posts/" + selectedPost.value.id, {
+    contents: selectedPost.value.contents,
+    edited: today + " at " + formatAMPM(new Date()),
   })
   .then(() => {
-    Action.post(url + "posts", selectedPost.value)
+    selectedPost.value.edited = today + " at " + formatAMPM(new Date());
   })
-}
+  .then(() => {
+    store.openModal('successModal');
+  })
+  .catch(() => {
+    store.openModal('failModal');
+  })
+};
 
 const cancelEditing = () => {
   selectedPost.value = {};
+  selectedSectionId.value = 0;
   document.querySelector("#editing").classList.add("hidden");
   document.querySelector("body").classList.remove("overflow-y-hidden");
 };
@@ -352,11 +354,12 @@ const cancelEditing = () => {
 
 <template>
   <div class="dashboard">
-    <div class="mx-auto w-[330px] shadow-lg text-center text-gray-600 dark:text-white border border-gray-400 dark:border-gray-600 p-9 rounded-lg bg-white dark:bg-slate-800">
-      <img class="w-20 h-20 rounded-full mx-auto border" :src="store.loggedInUser.avatar" alt="Rounded avatar">
-        <h4 class="mt-2">{{ store.loggedInUser.username }}</h4>
-        <p class="mt-2">{{ store.loggedInUser.email }}</p>
-        <p v-if="store.loggedInUser.admin" class="mt-2 text-green-500">Admin</p>
+    <div
+      class="mx-auto w-[330px] shadow-lg text-center text-gray-600 dark:text-white border border-gray-400 dark:border-gray-600 p-9 rounded-lg bg-white dark:bg-slate-800">
+      <img class="w-20 h-20 rounded-full mx-auto border" :src="store.loggedInUser.avatar" alt="Rounded avatar" />
+      <h4 class="mt-2">{{ store.loggedInUser.username }}</h4>
+      <p class="mt-2">{{ store.loggedInUser.email }}</p>
+      <p v-if="store.loggedInUser.admin" class="mt-2 text-green-500">Admin</p>
     </div>
     <form v-if="store.loggedInUser.admin"
       class="mx-auto w-[330px] mt-32 shadow-lg border border-gray-400 dark:border-gray-600 p-9 rounded-lg bg-white dark:bg-slate-800">
@@ -428,7 +431,7 @@ const cancelEditing = () => {
       </ul>
     </div>
 
-    <div id="editing" class="editing overflow-y-scroll hidden fixed top-0 w-full z-50 h-screen backdrop-blur-md">
+    <div id="editing" class="editing overflow-y-scroll hidden fixed top-0 w-full z-40 h-screen backdrop-blur-md">
       <div
         class="my-10 p-3 rounded-lg mx-auto w-[72%] border border-gray-400 dark:border-gray-600 bg-gray-100 dark:bg-gray-700">
         <form v-if="store.loggedInUser.admin"

@@ -14,8 +14,6 @@ onMounted(() => {
         posts.value.sort((a, b) => {
             return parseInt(a.sid) - parseInt(b.sid);
         });
-        //posts.value = posts.value.slice(posts.value.length - 3, posts.value.length);
-        posts.value.reverse();
     });
 });
 
@@ -39,15 +37,12 @@ const openPost = (id) => {
     document.querySelector("#post").classList.remove("hidden");
     document.querySelector("body").classList.add("overflow-y-hidden");
 
-    // setTimeout(() => {
-    //     Action.delete(url + "posts/" + selectedPost.value.id)
-    //         .then(() => {
-    //             selectedPost.value.views = parseInt(selectedPost.value.views) + 1;
-    //         })
-    //         .then(() => {
-    //             Action.post(url + "posts", selectedPost.value);
-    //         })
-    // }, 6000)
+    Action.put(url + "posts/" + selectedPost.value.id, {
+        views: parseInt(selectedPost.value.views) + 1
+    })
+        .then(() => {
+            selectedPost.value.views = parseInt(selectedPost.value.views) + 1;
+        })
 }
 
 const closePost = () => {
@@ -58,26 +53,39 @@ const closePost = () => {
 
 const likeAlert = ref(false);
 const likePost = () => {
-    if(store.isLoggedIn) {
-        Action.delete(url + "posts/" + selectedPost.value.id)
-        .then(() => {
-            if (!selectedPost.value.likedBy.includes(store.loggedInUser.email)) {
-                selectedPost.value.likedBy.push(store.loggedInUser.email);
-                selectedPost.value.likes++;
-                isLiked.value = true;
-            } else {
-                selectedPost.value.likedBy = selectedPost.value.likedBy.filter((person) => {
-                    if (person != store.loggedInUser.email) {
-                        return person;
-                    }
+    if (store.isLoggedIn) {
+
+
+        if (!selectedPost.value.likedBy.includes(store.loggedInUser.email)) {
+            Action.put(url + "posts/" + selectedPost.value.id, {
+                likedBy: [...selectedPost.value.likedBy, store.loggedInUser.email],
+                likes: selectedPost.value.likes + 1
+            })
+                .then(() => {
+                    selectedPost.value.likedBy.push(store.loggedInUser.email);
+                    selectedPost.value.likes++;
+                    isLiked.value = true;
                 })
-                selectedPost.value.likes--;
-                isLiked.value = false;
-            }
-        })
-        .then(() => {
-            Action.post(url + "posts", selectedPost.value);
-        })
+
+        } else {
+
+            selectedPost.value.likedBy = selectedPost.value.likedBy.filter((person) => {
+                if (person != store.loggedInUser.email) {
+                    return person;
+                }
+            })
+
+            Action.put(url + "posts/" + selectedPost.value.id, {
+                likedBy: selectedPost.value.likedBy,
+                likes: selectedPost.value.likes - 1
+            })
+                .then(() => {
+                    selectedPost.value.likes--;
+                    isLiked.value = false;
+                })
+
+        }
+
     } else {
         likeAlert.value = true;
     }
@@ -88,7 +96,7 @@ const likePost = () => {
 <template>
     <div class="posts w-[70%] mx-auto">
         <ul class="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <li @click="openPost(post.id)" @dblclick="likePost" v-for="(post, index) in posts" :key="index"
+            <li @click="openPost(post.id)" @dblclick="likePost" v-for="(post, index) in posts.slice(posts.length - 3, posts.length).reverse()" :key="index"
                 class="shadow-2xl aspect-square max-w-1/3 cursor-pointer bg-white dark:bg-slate-800">
                 <img :src="post.poster" alt="" class="w-[100%] aspect-square">
             </li>
@@ -111,7 +119,7 @@ const likePost = () => {
                         <li><i class="fa fa-clock-o"></i> {{ selectedPost?.created }}</li>
                         <li><i class="fa fa-edit"></i> {{ selectedPost?.edited }}</li>
                         <li><i class="fa fa-user"></i> {{ selectedPost?.auther }}</li>
-                        <!-- <li><i class="fa fa-eye"></i> {{ selectedPost?.views }}</li> -->
+                        <li><i class="fa fa-eye"></i> {{ selectedPost?.views }}</li>
                         <li><i class="fa fa-heart"></i> {{ selectedPost?.likes }}</li>
                     </ul>
                 </div>

@@ -1,15 +1,16 @@
 <script setup>
 import { onMounted } from "vue"
 import { useStore } from '../stores/store';
+import { Action } from "../api";
 const store = useStore();
 
 const props = defineProps(['loggedInUser']);
 
-// onMounted(() => {
-//   setTimeout(()=> {
-//     console.log(store.loggedInUser);
-//   }, 3000)
-// })
+onMounted(() => {
+  Action.get("http://localhost:8080/", (response) => {
+    console.log(response.data);
+  })
+})
 console.log(store.loggedInUser);
 </script>
 
