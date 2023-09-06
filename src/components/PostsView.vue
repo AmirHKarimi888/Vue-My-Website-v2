@@ -15,7 +15,14 @@ onMounted(() => {
             return parseInt(a.sid) - parseInt(b.sid);
         });
         posts.value.reverse();
-    });
+    })
+    .then(() => {
+        posts.value = posts.value.filter((post) => {
+            if(post.type == "post") {
+                return post;
+            }
+        })
+    })
 });
 
 const selectedPost = ref({ likedBy: [] });

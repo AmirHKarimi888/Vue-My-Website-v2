@@ -78,6 +78,8 @@ const createPost = () => {
   const newPost = {
     id: initial + 1,
     sid: initial + 1,
+    uid: Math.round(Math.random() * 100000000000000),
+    type: "post",
     auther: store.loggedInUser.email,
     created: today + " at " + formatAMPM(new Date()),
     edited: "",

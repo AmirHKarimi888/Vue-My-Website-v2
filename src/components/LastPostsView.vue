@@ -14,7 +14,14 @@ onMounted(() => {
         posts.value.sort((a, b) => {
             return parseInt(a.sid) - parseInt(b.sid);
         });
-    });
+    })
+    .then(() => {
+        posts.value = posts.value.filter((post) => {
+            if(post.type == "post") {
+                return post;
+            }
+        })
+    })
 });
 
 const selectedPost = ref({ likedBy: [] });

@@ -147,6 +147,13 @@ const props = defineProps(["store"]);
                 >Blog</router-link
               >
             </li>
+            <li>
+              <router-link
+                to="/about"
+                class="block py-2 pl-3 pr-4 rounded md:bg-transparent md:p-0"
+                >About</router-link
+              >
+            </li>
           </ul>
         </div>
       </div>
