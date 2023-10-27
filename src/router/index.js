@@ -40,7 +40,7 @@ const router = createRouter({
       component: AboutView
     }
   ],
-  linkExactActiveClass: 'text-blue-600 dark:text-blue-400'
+  linkExactActiveClass: 'text-blue-600 dark:text-cyan-500'
 })
 
 export default router

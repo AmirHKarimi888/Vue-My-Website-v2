@@ -2,6 +2,9 @@
 import { onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
 import LastPostsView from "../components/LastPostsView.vue";
+import { useTitle } from "@vueuse/core";
+
+useTitle("AmirHK888");
 
 const router = useRouter();
 
@@ -18,7 +21,7 @@ const deActiveAnimateFadeInUp = (id) => {
 const activeAnimateFadeInDown = (id) => {
   document
     .querySelector(`#${id}`)
-    .classList.add("animate__animated", "animate__fadeInDown");
+    .classList.add("animate__animated", "animate__fadeInUp");
 };
 
 const props = defineProps(["store"]);
@@ -27,7 +30,7 @@ const props = defineProps(["store"]);
 <template>
   <div class="home">
     <section id="intro"
-      class="h-screen mt-[-177px] p-6 bg-no-repeat bg-[url('https://flowbite.s3.amazonaws.com/docs/jumbotron/conference.jpg')] bg-cover bg-fixed bg-center bg-gray-700 bg-blend-multiply grid justify-center items-center">
+      class="h-screen mt-[-177px] p-6 bg-no-repeat bg-[url('/assets/banner.jpeg')] bg-cover bg-fixed bg-center bg-zinc-800 bg-blend-multiply grid justify-center items-center">
       <div id="introContent"
         class="animate__animated animate__fadeInUp px-4 mx-auto max-w-screen-xl text-center py-24 lg:py-56">
         <h1 class="mb-4 text-[150%] font-extrabold tracking-tight leading-none text-white md:text-5xl lg:text-6xl">
@@ -38,7 +41,7 @@ const props = defineProps(["store"]);
         </p>
         <div class="flex flex-col space-y-4 sm:flex-row sm:justify-center sm:space-y-0 sm:space-x-4">
           <a href="#projectsIntro" @click="deActiveAnimateFadeInUp('projectsIntroContent')"
-            class="inline-flex justify-center items-center py-3 px-5 text-base font-medium text-center text-white rounded-lg bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-900">
+            class="inline-flex justify-center items-center py-3 px-5 text-base font-medium text-center text-white rounded-lg bg-cyan-700 hover:bg-cyan-900 focus:ring-4 focus:ring-cyan-300 dark:focus:ring-cyan-900">
             Get started
             <svg class="w-3.5 h-3.5 ml-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
               viewBox="0 0 14 10">
@@ -56,7 +59,7 @@ const props = defineProps(["store"]);
 
     <section @mouseenter="activeAnimateFadeInUp('projectsIntroContent')"
       @touchstart="activeAnimateFadeInUp('projectsIntroContent')" id="projectsIntro"
-      class="h-screen bg-center bg-no-repeat bg-blend-multiply grid justify-center items-center bg-white dark:bg-gray-800 dark:border-gray-600">
+      class="h-screen bg-center bg-no-repeat bg-blend-multiply grid justify-center items-center bg-white dark:bg-zinc-800 dark:border-gray-600">
       <div id="projectsIntroContent" class="md:flex lg:flex sm:grid mt-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2">
         <div
           class="p-8 text-left text-lg bg-local bg-center bg-no-repeat bg-cover bg-blend-multiply hover:bg-blend-soft-light dark:hover:bg-blend-darken md:w-1/2 lg:w-1/2 grid justify-center items-center"
@@ -86,7 +89,7 @@ const props = defineProps(["store"]);
 
     <section @mouseenter="activeAnimateFadeInUp('blogIntroContent')"
       @touchstart="activeAnimateFadeInDown('blogIntroContent')" id="blogIntro"
-      class="h-screen bg-center bg-no-repeat bg-blend-multiply grid justify-center items-center bg-white dark:bg-gray-800 dark:border-gray-600">
+      class="h-screen bg-center bg-no-repeat bg-blend-multiply grid justify-center items-center bg-white dark:bg-zinc-800 dark:border-gray-600">
       <div id="blogIntroContent" class="md:flex lg:flex sm:grid mt-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2">
         <div
           class="animate__animated animate__fadeInUp p-10 text-left bg-local bg-center bg-no-repeat bg-cover bg-blend-multiply hover:bg-blend-soft-light dark:hover:bg-blend-darken md:w-1/2 lg:w-1/2"
@@ -115,7 +118,7 @@ const props = defineProps(["store"]);
 
     <section @mouseenter="activeAnimateFadeInUp('contactIntroContent')"
       @touchstart="activeAnimateFadeInUp('contactIntroContent')" id="contactIntro"
-      class="h-screen bg-center bg-no-repeat bg-blend-multiply grid justify-center items-center bg-white dark:bg-gray-800 dark:border-gray-600">
+      class="h-screen bg-center bg-no-repeat bg-blend-multiply grid justify-center items-center bg-white dark:bg-zinc-800 dark:border-gray-600">
       <div id="contactIntroContent" class="md:flex lg:flex sm:grid mt-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2">
         <div
           class="p-8 text-left text-lg bg-local bg-center bg-no-repeat bg-cover bg-blend-multiply hover:bg-blend-soft-light dark:hover:bg-blend-darken md:w-1/2 lg:w-1/2 grid justify-center items-center"

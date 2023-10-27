@@ -1,6 +1,8 @@
 <script setup>
 import PostsView from '../components/PostsView.vue';
+import { useTitle } from "@vueuse/core";
 
+useTitle("Blog");
 
 </script>
 

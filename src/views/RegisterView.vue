@@ -5,6 +5,7 @@ import { useForm } from "vee-validate";
 import { useStore } from "../stores/store";
 import { Action, url } from "../api/index"
 import * as yup from "yup";
+import { useTitle } from "@vueuse/core";
 
 const props = defineProps([]);
 const router = useRouter();
@@ -13,6 +14,9 @@ const store = useStore();
 const users = ref([]);
 
 onMounted(() => {
+  
+  useTitle("Register");
+
   Action.get(url + "users", (response) => {
     users.value = response.data;
   }).then(() => {
@@ -81,7 +85,7 @@ const registerUser = handleSubmit((data) => {
   <div class="register">
     <form
       @submit="registerUser"
-      class="mx-auto w-[330px] shadow-lg border border-gray-400 dark:border-gray-600 p-9 rounded-lg"
+      class="mx-auto w-[330px] shadow-lg border border-gray-400 dark:border-zinc-600 dark:bg-zinc-900 p-9 rounded-lg"
     >
       <div class="mb-6">
         <label
@@ -93,7 +97,7 @@ const registerUser = handleSubmit((data) => {
           v-bind="username"
           type="text"
           id="base-input"
-          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-cyan-500 focus:border-cyan-500 block w-full p-2.5 dark:bg-zinc-700 dark:border-zinc-600 dark:placeholder-zinc-400 dark:text-white dark:focus:ring-cyan-500 dark:focus:border-cyan-500"
         />
         <p class="mt-2 text-sm text-red-600 dark:text-red-500"><span class="font-medium">{{ errors.username }}</span></p>
       </div>
@@ -107,7 +111,7 @@ const registerUser = handleSubmit((data) => {
           v-bind="email"
           type="email"
           id="email"
-          class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light"
+          class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-cyan-500 focus:border-cyan-500 block w-full p-2.5 dark:bg-zinc-700 dark:border-zinc-600 dark:placeholder-zinc-400 dark:text-white dark:focus:ring-cyan-500 dark:focus:border-cyan-500 dark:shadow-sm-light"
           placeholder="name@flowbite.com"
           required
         />
@@ -123,7 +127,7 @@ const registerUser = handleSubmit((data) => {
           v-bind="password"
           type="password"
           id="password"
-          class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light"
+          class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-cyan-500 focus:border-cyan-500 block w-full p-2.5 dark:bg-zinc-700 dark:border-zinc-600 dark:placeholder-zinc-400 dark:text-white dark:focus:ring-cyan-500 dark:focus:border-cyan-500 dark:shadow-sm-light"
           required
         />
         <p class="mt-2 text-sm text-red-600 dark:text-red-500"><span class="font-medium">{{ errors.password }}</span></p>
@@ -138,7 +142,7 @@ const registerUser = handleSubmit((data) => {
           v-bind="repeatPassword"
           type="password"
           id="repeat-password"
-          class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light"
+          class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-cyan-500 focus:border-cyan-500 block w-full p-2.5 dark:bg-zinc-700 dark:border-zinc-600 dark:placeholder-zinc-400 dark:text-white dark:focus:ring-cyan-500 dark:focus:border-cyan-500 dark:shadow-sm-light"
           required
         />
         <p class="mt-2 text-sm text-red-600 dark:text-red-500"><span class="font-medium">{{ errors.repeatPassword }}</span></p>
@@ -149,7 +153,7 @@ const registerUser = handleSubmit((data) => {
             id="terms"
             type="checkbox"
             value=""
-            class="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-blue-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800"
+            class="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-cyan-300 dark:bg-zinc-700 dark:border-zinc-600 dark:focus:ring-cyan-600 dark:ring-offset-gray-900 dark:focus:ring-offset-gray-900"
             required
           />
         </div>
@@ -157,20 +161,20 @@ const registerUser = handleSubmit((data) => {
           for="terms"
           class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
           >I agree with the
-          <a href="#" class="text-blue-600 hover:underline dark:text-blue-500"
+          <a href="#" class="text-cyan-600 hover:underline dark:text-cyan-500"
             >terms and conditions</a
           ></label
         >
       </div>
       <button
         type="submit"
-        class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+        class="text-white bg-cyan-700 hover:bg-cyan-900 focus:ring-4 focus:outline-none focus:ring-cyan-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-cyan-600 dark:hover:bg-cyan-700 dark:focus:ring-cyan-900"
       >
         Register new account
       </button>
       <p v-if="alreadyExistsError" class="mt-5 text-sm text-red-600 dark:text-red-500"><span class="font-medium">Oops!</span> User already exists!</p>
       <p v-if="registeredSuccessfully" class="mt-5 text-sm text-green-600 dark:text-green-500"><span class="font-medium">Alright!</span> Registered successfully!</p>
-      <p class="mt-5 text-sm text-gray-700 dark:text-gray-400"> Do you already have an account? <router-link to="/login" class="text-blue-500">Login</router-link></p>
+      <p class="mt-5 text-sm text-gray-700 dark:text-gray-400"> Do you already have an account? <router-link to="/login" class="text-cyan-500">Login</router-link></p>
     </form>
   </div>
 </template>

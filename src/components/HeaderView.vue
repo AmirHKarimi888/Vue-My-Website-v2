@@ -9,13 +9,13 @@ const props = defineProps(["store"]);
 <template>
   <div class="header">
     <nav
-      class="fixed top-0 w-full z-20 bg-white border-gray-200 dark:border-gray-600 dark:bg-gray-900 border-b border-b-gray-400"
+      class="fixed top-0 w-full z-20 bg-white border-gray-200 dark:border-gray-900 dark:bg-black border-b border-b-gray-400"
     >
       <div
         class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4"
       >
         <a href="/" class="flex items-center">
-          <img src="/assets/vue-logo.png" class="h-8 mr-3" alt="Logo" />
+          <img src="/assets/logo.jpg" class="h-12 rounded-full mr-3" alt="Logo" />
           <span
             class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white"
             >My Website</span
@@ -25,7 +25,7 @@ const props = defineProps(["store"]);
         <div class="flex items-center md:order-2">
           <!-- Dropdown menu -->
           <div
-            class="z-50 hidden my-4 text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-700 dark:divide-gray-600"
+            class="z-50 hidden my-4 text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-900 dark:divide-gray-600"
             id="user-dropdown"
           >
             <div class="px-4 py-3">
@@ -41,28 +41,28 @@ const props = defineProps(["store"]);
               <li>
                 <a
                   href="#"
-                  class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
+                  class="block px-4 py-2 text-sm text-gray-900 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
                   >Dashboard</a
                 >
               </li>
               <li>
                 <a
                   href="#"
-                  class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
+                  class="block px-4 py-2 text-sm text-gray-900 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
                   >Settings</a
                 >
               </li>
               <li>
                 <a
                   href="#"
-                  class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
+                  class="block px-4 py-2 text-sm text-gray-900 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
                   >Earnings</a
                 >
               </li>
               <li>
                 <a
                   href="#"
-                  class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
+                  class="block px-4 py-2 text-sm text-gray-900 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
                   >Sign out</a
                 >
               </li>
@@ -73,7 +73,7 @@ const props = defineProps(["store"]);
             @click="store.toggleTheme()"
             data-collapse-toggle="navbar-user"
             type="button"
-            class="inline-flex items-center p-2 me-2 w-10 h-10 justify-center text-2xl text-gray-500 rounded-lg hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
+            class="inline-flex items-center p-2 me-2 w-10 h-10 justify-center text-2xl text-gray-500 rounded-lg hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-900 dark:focus:ring-gray-600"
             aria-controls="navbar-user"
             aria-expanded="false"
           >
@@ -85,7 +85,7 @@ const props = defineProps(["store"]);
             @click="store.toggleSmallNavbar()"
             data-collapse-toggle="navbar-user"
             type="button"
-            class="inline-flex items-center p-2 me-2 w-10 h-10 justify-center text-2xl text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
+            class="inline-flex items-center p-2 me-2 w-10 h-10 justify-center text-2xl text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-900 dark:focus:ring-gray-600"
             aria-controls="navbar-user"
             aria-expanded="false"
           >
@@ -96,7 +96,7 @@ const props = defineProps(["store"]);
             v-if="store.isLoggedIn"
             @click="store.toggleSidebar()"
             type="button"
-            class="flex mr-3 text-sm bg-gray-800 rounded-full md:mr-0 focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600"
+            class="flex mr-3 text-sm bg-gray-900 rounded-full md:mr-0 focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600"
             id="user-menu-button"
             aria-expanded="false"
             data-dropdown-toggle="user-dropdown"
@@ -116,7 +116,7 @@ const props = defineProps(["store"]);
           id="small-navbar"
         >
           <ul
-            class="flex flex-col text-black dark:text-white font-medium p-4 md:p-0 mt-4 border border-gray-300 rounded-lg bg-gray-50 md:flex-row md:space-x-8 md:mt-0 md:border-0 md:bg-white dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700"
+            class="flex flex-col text-black dark:text-white font-medium p-4 md:p-0 mt-4 border border-gray-300 rounded-lg bg-gray-50 md:flex-row md:space-x-8 md:mt-0 md:border-0 md:bg-white dark:bg-zinc-900 md:dark:bg-black dark:border-gray-900"
           >
             <li>
               <router-link

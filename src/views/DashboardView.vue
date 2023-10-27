@@ -4,6 +4,7 @@ import { useRoute, useRouter } from "vue-router";
 import { useStore } from "../stores/store";
 import * as filestack from "filestack-js";
 import { Action, url } from "../api";
+import { useTitle } from "@vueuse/core";
 
 const props = defineProps(["store"]);
 const store = useStore();
@@ -20,6 +21,7 @@ const style = ref("");
 const globalEditStatus = ref(false);
 
 onMounted(() => {
+  useTitle("Dashboard");
   Action.get(url + "posts", (response) => {
     posts.value = response.data;
     posts.value.sort((a, b) => {
@@ -357,30 +359,30 @@ const cancelEditing = () => {
 <template>
   <div class="dashboard">
     <div
-      class="mx-auto w-[330px] shadow-lg text-center text-gray-600 dark:text-white border border-gray-400 dark:border-gray-600 p-9 rounded-lg bg-white dark:bg-slate-800">
+      class="mx-auto w-[330px] shadow-lg text-center text-gray-600 dark:text-white border border-gray-400 dark:border-zinc-600 p-9 rounded-lg bg-white dark:bg-zinc-900">
       <img class="w-20 h-20 rounded-full mx-auto border" :src="store.loggedInUser.avatar" alt="Rounded avatar" />
       <h4 class="mt-2">{{ store.loggedInUser.username }}</h4>
       <p class="mt-2">{{ store.loggedInUser.email }}</p>
       <p v-if="store.loggedInUser.admin" class="mt-2 text-green-500">Admin</p>
     </div>
     <form v-if="store.loggedInUser.admin"
-      class="mx-auto w-[330px] mt-32 shadow-lg border border-gray-400 dark:border-gray-600 p-9 rounded-lg bg-white dark:bg-slate-800">
+      class="mx-auto w-[330px] mt-32 shadow-lg border border-gray-400 dark:border-zinc-600 p-9 rounded-lg bg-white dark:bg-zinc-900">
       <div class="mb-6">
         <label for="title" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Title</label>
         <input v-model="title" type="text" id="title"
-          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-zinc-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
           placeholder="post title" />
       </div>
       <div class="mb-6">
         <label for="poster" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Poster</label>
         <input v-model="media" type="text" id="poster"
-          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-zinc-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
           placeholder="post poster" />
       </div>
       <div class="mb-6">
         <label for="password" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Upload</label>
         <button @click="openUploader" type="button"
-          class="text-white bg-gradient-to-r from-pink-400 via-pink-500 to-pink-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-pink-300 dark:focus:ring-pink-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2">
+          class="text-white bg-gradient-to-r from-pink-400 via-pink-500 to-pink-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-pink-300 dark:focus:ring-pink-900 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2">
           Click to upload the poster
         </button>
         <p class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
@@ -388,11 +390,11 @@ const cancelEditing = () => {
         </p>
       </div>
       <button v-if="!globalEditStatus" @click="createPost" type="button"
-        class="text-white bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2">
+        class="text-white bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-900 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2">
         Create Post
       </button>
       <button v-if="globalEditStatus" @click="editPostHeader" type="button"
-        class="text-white bg-gradient-to-br from-green-400 to-blue-600 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-green-200 dark:focus:ring-green-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2">
+        class="text-white bg-gradient-to-br from-green-400 to-blue-600 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-green-200 dark:focus:ring-green-900 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2">
         Edit Post Header
       </button>
     </form>
@@ -400,7 +402,7 @@ const cancelEditing = () => {
     <div v-if="store.loggedInUser.admin" class="posts mt-32 w-[66%] mx-auto">
       <ul class="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         <li v-for="(post, index) in posts" :key="index"
-          class="border border-gray-400 dark:border-gray-600 p-5 shadow-lg aspect-square max-w-1/3 rounded-lg bg-white dark:bg-slate-800">
+          class="border border-gray-400 dark:border-zinc-600 p-5 shadow-lg aspect-square max-w-1/3 rounded-lg bg-white dark:bg-zinc-900">
           <div class="my-5 mx-auto text-center">
             <button class="mx-3">
               <i @click="startEditingPostHeader(post.id, post.sid)" :class="post.editStatus
@@ -425,7 +427,7 @@ const cancelEditing = () => {
           </p>
           <div class="mx-auto text-center mt-5">
             <button @click="openEditMore(post.sid)" type="button"
-              class="text-white bg-gradient-to-br from-green-400 to-blue-600 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-green-200 dark:focus:ring-green-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2">
+              class="text-white bg-gradient-to-br from-green-400 to-blue-600 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-green-200 dark:focus:ring-green-900 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2">
               Edit More
             </button>
           </div>
@@ -435,14 +437,14 @@ const cancelEditing = () => {
 
     <div id="editing" class="editing overflow-y-scroll hidden fixed top-0 w-full z-40 h-screen backdrop-blur-md">
       <div
-        class="my-10 p-3 rounded-lg mx-auto w-[72%] border border-gray-400 dark:border-gray-600 bg-gray-100 dark:bg-gray-700">
+        class="my-10 p-3 rounded-lg mx-auto w-[72%] border border-gray-400 dark:border-zinc-600 bg-gray-100 dark:bg-gray-700">
         <form v-if="store.loggedInUser.admin"
-          class="mx-auto my-10 w-[90%] shadow-lg border border-gray-400 dark:border-gray-600 p-9 rounded-lg">
+          class="mx-auto my-10 w-[90%] shadow-lg border border-gray-400 dark:border-zinc-600 p-9 rounded-lg">
           <div class="mb-6">
             <label for="countries" class="block mt-5 mb-2 text-sm font-medium text-gray-900 dark:text-white">Tag
               Type</label>
             <select v-model="type" id="countries"
-              class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+              class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-zinc-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
               <option value="text">Text</option>
               <option value="link">Link</option>
               <option value="image">Image</option>
@@ -452,22 +454,22 @@ const cancelEditing = () => {
             </select>
             <label for="text" class="block mt-5 mb-2 text-sm font-medium text-gray-900 dark:text-white">Text</label>
             <textarea v-model="text" type="text" id="text"
-              class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-zinc-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
               placeholder="text"></textarea>
             <label for="media" class="block mt-5 mb-2 text-sm font-medium text-gray-900 dark:text-white">Media</label>
             <textarea v-model="media" type="text" id="media"
-              class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-zinc-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
               placeholder="media"></textarea>
 
             <label for="style" class="block mt-5 mb-2 text-sm font-medium text-gray-900 dark:text-white">Style</label>
             <textarea v-model="style" type="text" id="style"
-              class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-zinc-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
               placeholder="style"></textarea>
           </div>
           <div class="mb-6">
             <label for="password" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Upload</label>
             <button @click="openUploader" type="button"
-              class="text-white bg-gradient-to-r from-pink-400 via-pink-500 to-pink-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-pink-300 dark:focus:ring-pink-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2">
+              class="text-white bg-gradient-to-r from-pink-400 via-pink-500 to-pink-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-pink-300 dark:focus:ring-pink-900 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2">
               Click to upload what you want
             </button>
             <p class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
@@ -475,11 +477,11 @@ const cancelEditing = () => {
             </p>
           </div>
           <button @click="createSection(parseInt(selectedPost.id))" v-if="!globalEditStatus" type="button"
-            class="text-white bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2">
+            class="text-white bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-900 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2">
             Create Section
           </button>
           <button @click="editSection(parseInt(selectedPost.id))" v-if="globalEditStatus" type="button"
-            class="text-white bg-gradient-to-br from-green-400 to-blue-600 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-green-200 dark:focus:ring-green-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2">
+            class="text-white bg-gradient-to-br from-green-400 to-blue-600 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-green-200 dark:focus:ring-green-900 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2">
             Edit Section
           </button>
         </form>
@@ -548,7 +550,7 @@ const cancelEditing = () => {
 
         <div class="mx-auto text-center mt-5">
           <button @click="cancelEditing" type="button"
-            class="text-white bg-gradient-to-r from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2">
+            class="text-white bg-gradient-to-r from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-900 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2">
             Cancel Editing
           </button>
         </div>

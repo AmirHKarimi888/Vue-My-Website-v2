@@ -105,7 +105,7 @@ const likePost = () => {
     <div class="posts mt-32 w-[70%] mx-auto">
         <ul class="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             <li @click="openPost(post.id)" @dblclick="likePost" v-for="(post, index) in posts" :key="index"
-                class="shadow-2xl aspect-square max-w-1/3 cursor-pointer bg-white dark:bg-slate-800">
+                class="shadow-2xl aspect-square max-w-1/3 cursor-pointer bg-white dark:bg-zinc-900">
                 <img :src="post.poster" alt="" class="w-[100%] aspect-square">
             </li>
         </ul>
@@ -114,7 +114,7 @@ const likePost = () => {
     <div @click.self="closePost" id="post"
         class="post overflow-y-scroll hidden fixed top-0 w-full z-50 h-screen backdrop-blur-md">
         <div
-            class="my-10 p-3 rounded-lg mx-auto w-[90%] border border-gray-400 dark:border-gray-600 bg-gray-100 dark:bg-gray-700">
+            class="my-10 p-3 rounded-lg mx-auto w-[90%] border border-gray-400 dark:border-zinc-600 bg-gray-100 dark:bg-zinc-900">
 
             <div class="postContents">
                 <div class="postHeader">
@@ -123,7 +123,7 @@ const likePost = () => {
                     </p>
 
                     <ul
-                        class="w-[100%] grid lg:grid-cols-5 md:grid-cols-3 sm:grid-cols-2 items-center text-[75%] bg-gray-200 dark:bg-gray-600 rounded-md text-gray-600 dark:text-white my-2 p-3 gap-2 text-center">
+                        class="w-[100%] grid lg:grid-cols-5 md:grid-cols-3 sm:grid-cols-2 items-center text-[75%] bg-gray-200 dark:bg-zinc-600 rounded-md text-gray-600 dark:text-white my-2 p-3 gap-2 text-center">
                         <li><i class="fa fa-clock-o"></i> {{ selectedPost?.created }}</li>
                         <li><i class="fa fa-edit"></i> {{ selectedPost?.edited }}</li>
                         <li><i class="fa fa-user"></i> {{ selectedPost?.auther }}</li>

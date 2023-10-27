@@ -8,6 +8,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@vueuse/core": "^10.5.0",
     "axios": "^1.4.0",
     "filestack-js": "^3.27.0",
     "pinia": "^2.1.4",
