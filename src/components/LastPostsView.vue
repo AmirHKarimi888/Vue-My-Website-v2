@@ -113,7 +113,7 @@ const likePost = () => {
     <div @click.self="closePost" id="post"
         class="post overflow-y-scroll hidden fixed top-0 w-full z-50 h-screen backdrop-blur-md">
         <div
-            class="my-10 p-3 rounded-lg mx-auto w-[90%] border border-gray-400 dark:border-zinc-600 bg-gray-100 dark:bg-zinc-900">
+            class="my-10 p-3 rounded-lg mx-auto w-[90%] border border-gray-400 dark:border-zinc-700 bg-gray-100 dark:bg-zinc-800">
 
             <div class="postContents">
                 <div class="postHeader">
@@ -122,7 +122,7 @@ const likePost = () => {
                     </p>
 
                     <ul
-                        class="w-[100%] grid lg:grid-cols-5 md:grid-cols-3 sm:grid-cols-2 items-center text-[75%] bg-gray-200 dark:bg-zinc-600 rounded-md text-gray-600 dark:text-white my-2 p-3 gap-2 text-center">
+                        class="w-[100%] grid lg:grid-cols-5 md:grid-cols-3 sm:grid-cols-2 items-center text-[75%] bg-gray-200 dark:bg-zinc-700 rounded-md text-gray-600 dark:text-white my-2 p-3 gap-2 text-center">
                         <li><i class="fa fa-clock-o"></i> {{ selectedPost?.created }}</li>
                         <li><i class="fa fa-edit"></i> {{ selectedPost?.edited }}</li>
                         <li><i class="fa fa-user"></i> {{ selectedPost?.auther }}</li>
